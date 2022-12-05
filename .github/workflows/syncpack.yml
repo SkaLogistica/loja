@@ -1,0 +1,34 @@
+name: Lint package.json
+
+on:
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  syncpack:
+    runs-on: ubuntu-latest
+    name: syncpack
+    steps:
+      - name: 🏗 Setup repo
+        uses: actions/checkout@v3
+
+      - name: 🏗 Setup Node
+        uses: actions/setup-node@v3
+        with:
+          node-version: 16
+
+      - uses: JamieMason/syncpack-github-action@0.2.2
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          bot-email: 'github-actions@github.com'
+          bot-username: 'github-actions[bot]'
+          commit-message: '🚨 (syncpack): format and sync package.json files'
+          format-mismatches: 'fix'
+          lockfile-mismatches: 'fix'
+          package-manager-version: 'latest'
+          package-manager: 'npm'
+          semver-range-mismatches: 'fix'
+          syncpack-version: '7.2.1'
+          version-mismatches: 'fix'

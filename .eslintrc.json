@@ -1,11 +1,55 @@
 {
-  "parser": "@typescript-eslint/parser",
   "parserOptions": {
     "project": "./tsconfig.json"
   },
-  "plugins": ["@typescript-eslint"],
-  "extends": ["next/core-web-vitals", "plugin:@typescript-eslint/recommended"],
+  "plugins": [
+    "tailwindcss",
+    "simple-import-sort"
+  ],
+  "extends": [
+    "@antfu",
+    "plugin:tailwindcss/recommended",
+    "next/core-web-vitals",
+    "plugin:prettier/recommended"
+  ],
   "rules": {
-    "@typescript-eslint/consistent-type-imports": "warn"
+    "antfu/if-newline": "off",
+    "@typescript-eslint/consistent-type-imports": "warn",
+    "tailwindcss/classnames-order": "off",
+    "tailwindcss/no-custom-classname": "off",
+    "simple-import-sort/imports": [
+      "error",
+      {
+        "groups": [
+          [
+            "^react",
+            "^@?\\w"
+          ],
+          [
+            "^(@|components)(/.*|$)",
+            "@(root)"
+          ],
+          [
+            "^\\u0000"
+          ],
+          [
+            "^\\.\\.(?!/?$)",
+            "^\\.\\./?$"
+          ],
+          [
+            "^\\./(?=.*/)(?!/?$)",
+            "^\\.(?!/?$)",
+            "^\\./?$"
+          ],
+          [
+            "^.+\\.?(css)$"
+          ]
+        ]
+      }
+    ],
+    "simple-import-sort/exports": "error",
+    "import/first": "error",
+    "import/newline-after-import": "error",
+    "import/no-duplicates": "error"
   }
 }
