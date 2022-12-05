@@ -22,3 +22,11 @@ npm run dev
 ## Licença
 
 Esse projeto foi licenciado pela Apache License 2.0 - ver [LICENSE](LICENSE) para mais detalhes
+
+## Ambiente de Produção
+
+- ProtonMail e-mail host
+- MySql DB PlanetScale
+- AWS S3 Bucket
+- Vercel Team Deploy
+- Google App on <contato@tmtecnologia.dev.br>
