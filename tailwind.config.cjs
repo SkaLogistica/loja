@@ -6,7 +6,21 @@ module.exports = {
   },
   plugins: [require('daisyui')],
   daisyui: {
-    themes: ['cmyk', 'business'],
-    darkTheme: 'business',
+    themes: [
+      {
+        mytheme: {
+          primary: '#ffa600',
+          secondary: '#58508d',
+          accent: '#bc5090',
+          neutral: '#003f5c',
+          'base-100': '#FFFFFF',
+          info: '#3ABFF8',
+          success: '#36D399',
+          warning: '#FBBD23',
+          error: '#F87272',
+        },
+      },
+    ],
+    // darkTheme: 'business',
   },
 }
