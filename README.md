@@ -4,8 +4,9 @@
 
 ```bash
 git clone https://github.com/SkaLogistica/loja.git
-cd endividometro
+cd loja
 npm install
+docker-compose up -d
 npx prisma db push
 npm run dev
 ```
