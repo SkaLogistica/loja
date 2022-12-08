@@ -2,7 +2,7 @@ import { type NextPage } from 'next'
 import Head from 'next/head'
 import { signIn, signOut, useSession } from 'next-auth/react'
 
-import { trpc } from '../utils/trpc'
+import { trpc, withAuth } from '@root/utils'
 
 const Admin: NextPage = () => {
   const { data: sessionData } = useSession()
@@ -201,4 +201,4 @@ const Admin: NextPage = () => {
   )
 }
 
-export default Admin
+export default withAuth(Admin /* ['Admin', 'Moderator'] */)
