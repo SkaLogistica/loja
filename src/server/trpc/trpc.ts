@@ -1,6 +1,8 @@
-/* eslint-disable-next-line sort-imports */
+import type { Role } from '@prisma/client'
 import { initTRPC, TRPCError } from '@trpc/server'
 import superjson from 'superjson'
+
+import { env } from '@root/env/server.mjs'
 
 import { type Context } from './context'
 
@@ -34,7 +36,37 @@ const isAuthed = t.middleware(({ ctx, next }) => {
   })
 })
 
+const has = (roles: Role[]) =>
+  t.middleware(async ({ ctx, next }) => {
+    if (!ctx.session?.user) {
+      throw new TRPCError({ code: 'UNAUTHORIZED' })
+    }
+
+    const user = await ctx.prisma.user.findUnique({
+      where: {
+        id: ctx.session.user.id,
+      },
+    })
+
+    /* NOTE: ADMIN default email has super user capabilities beyond roles */
+    if (user?.email === env.ADMIN_EMAIL) {
+      return next()
+    }
+
+    if (!roles.includes(user?.role ?? 'User')) {
+      throw new TRPCError({ code: 'UNAUTHORIZED' })
+    }
+
+    return next()
+  })
+
 /**
  * Protected procedure
  **/
 export const protectedProcedure = t.procedure.use(isAuthed)
+
+export const createRbacProcedure = ({
+  requiredRoles,
+}: {
+  requiredRoles: Role[]
+}) => protectedProcedure.use(has(requiredRoles))
