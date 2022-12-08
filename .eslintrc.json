@@ -17,6 +17,8 @@
     "@typescript-eslint/consistent-type-imports": "warn",
     "tailwindcss/classnames-order": "off",
     "tailwindcss/no-custom-classname": "off",
+    "import/order": "off",
+    "sort-imports": "off",
     "simple-import-sort/imports": [
       "error",
       {
