@@ -1,20 +1,26 @@
+import { useState } from 'react'
+import type { Role } from '@prisma/client'
 import { type NextPage } from 'next'
 import Head from 'next/head'
+import Image from 'next/image'
 import { signIn, signOut, useSession } from 'next-auth/react'
 
 import { trpc, withAuth } from '@root/utils'
 
 const Admin: NextPage = () => {
   const { data: sessionData } = useSession()
+  const [name, setName] = useState('')
+  const [role, setRole] = useState<Role | undefined>(undefined)
 
-  const { data: userRole } = trpc.auth.getUserRole.useQuery(undefined, {
-    enabled: sessionData?.user !== undefined,
-  })
-
-  // const hasCorrectRole =
-  //   userRole && (userRole === 'Admin' || userRole !== 'Moderator')
-
-  // TODO: get all users
+  const { data: usersData } = trpc.user.getAllUsers.useQuery(
+    {
+      name,
+      roles: role ? [role] : undefined,
+    },
+    {
+      enabled: sessionData?.user !== undefined,
+    }
+  )
 
   const translateRoles = {
     Admin: 'Administrador',
@@ -23,7 +29,7 @@ const Admin: NextPage = () => {
     Editor: 'Editor',
   }
 
-  function translateRole(role: typeof userRole) {
+  function translateRole(role: Role | undefined) {
     if (role === undefined) {
       return 'NÃO DEFINIDO'
     }
@@ -96,7 +102,7 @@ const Admin: NextPage = () => {
           <a className="text-xl font-bold normal-case">Usuários</a>
         </div>
         <div className="navbar-end">
-          <div className="dropdown-end dropdown">
+          <div className="dropdown dropdown-end">
             <div className="flex flex-col items-center pr-11">
               {getAvatarImg()}
               <span>{sessionData?.user?.name}</span>
@@ -126,16 +132,20 @@ const Admin: NextPage = () => {
               type="text"
               placeholder="Nome"
               className="input-bordered input input-lg"
+              onChange={(e) => setName(e.target.value)}
             />
             <select
               className="select-bordered select"
               defaultValue="Filtrar Papéis"
+              onChange={(e) => setRole(e.target.value as Role)}
             >
               <option disabled>Filtrar Papéis</option>
-              {Object.values(translateRoles)
+              {Object.entries(translateRoles)
                 .sort()
-                .map((role) => (
-                  <option key={role}>{role}</option>
+                .map(([role, translation]) => (
+                  <option key={role} value={role}>
+                    {translation}
+                  </option>
                 ))}
             </select>
           </div>
@@ -156,33 +166,38 @@ const Admin: NextPage = () => {
                 </tr>
               </thead>
               <tbody>
-                <tr>
-                  <th>
-                    <label>
-                      <input type="checkbox" className="checkbox" />
-                    </label>
-                  </th>
-                  <td>
-                    <div className=" flex items-center space-x-3">
-                      <div className="avatar">
-                        <div className="mask mask-squircle h-12 w-12">
-                          <img src={sessionData?.user?.image ?? ''} />
+                {usersData?.map((user) => (
+                  <tr key={user.id}>
+                    <th>
+                      <label>
+                        <input type="checkbox" className="checkbox" />
+                      </label>
+                    </th>
+                    <td>
+                      <div className=" flex items-center space-x-3">
+                        <div className="avatar">
+                          <div className="mask mask-squircle h-12 w-12">
+                            <Image
+                              src={user.image ?? ''}
+                              alt={`Foto de perfil do usuário ${user.name}`}
+                              width={32}
+                              height={32}
+                            />
+                          </div>
+                        </div>
+                        <div>
+                          <div className="font-bold">{user.name ?? ''}</div>
                         </div>
                       </div>
-                      <div>
-                        <div className="font-bold">
-                          {sessionData?.user?.name ?? ''}
-                        </div>
-                      </div>
-                    </div>
-                  </td>
-                  <td>{translateRole(userRole)}</td>
-                  <td>{sessionData?.user?.email ?? ''}</td>
-                  <td>
-                    {/* TODO: implement disable user */}
-                    <input type="checkbox" className="toggle" />
-                  </td>
-                </tr>
+                    </td>
+                    <td>{translateRole(user.role)}</td>
+                    <td>{user.email ?? ''}</td>
+                    <td>
+                      {/* TODO: implement disable user */}
+                      <input type="checkbox" className="toggle" />
+                    </td>
+                  </tr>
+                ))}
               </tbody>
               <tfoot>
                 <tr>
@@ -201,4 +216,4 @@ const Admin: NextPage = () => {
   )
 }
 
-export default withAuth(Admin /* ['Admin', 'Moderator'] */)
+export default withAuth(Admin, ['Admin', 'Moderator'])
