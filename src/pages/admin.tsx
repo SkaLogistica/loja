@@ -214,7 +214,7 @@ const Admin: NextPage = () => {
                   <th>
                     <label>
                       {/* TODO: implement select all */}
-                      <input type="checkbox" className="checkbox" disabled />
+                      {/* <input type="checkbox" className="checkbox" disabled /> */}
                     </label>
                   </th>
                   <th>Nome</th>
