@@ -30,11 +30,12 @@ export const userRouter = router({
         },
       })
     }),
-  updateUserStatus: userProcedure
+  updateUser: userProcedure
     .input(
       z.object({
         id: z.string().cuid(),
-        active: z.boolean().default(false),
+        active: z.boolean().optional(),
+        role: z.nativeEnum(Role).optional(),
       })
     )
     .mutation(({ ctx, input }) => {
@@ -44,6 +45,7 @@ export const userRouter = router({
         },
         data: {
           active: input.active,
+          role: input.role,
         },
       })
     }),

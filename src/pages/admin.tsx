@@ -21,22 +21,17 @@ const Admin: NextPage = () => {
       enabled: sessionData?.user !== undefined,
     }
   )
-  const { mutate: updateUserStatus } = trpc.user.updateUserStatus.useMutation()
+  const { mutate: updateUser } = trpc.user.updateUser.useMutation()
   const toggleStatus = ({ id, active }: { id: string; active: boolean }) =>
-    updateUserStatus({ id, active: !active })
+    updateUser({ id, active: !active })
+  const updateRole = ({ id, role }: { id: string; role: Role }) =>
+    updateUser({ id, role })
 
   const translateRoles = {
     Admin: 'Administrador',
     User: 'Usuário',
     Moderator: 'Moderador',
     Editor: 'Editor',
-  }
-
-  function translateRole(role: Role | undefined) {
-    if (role === undefined) {
-      return 'NÃO DEFINIDO'
-    }
-    return translateRoles[role]
   }
 
   const getAvatarImg = () => {
@@ -139,7 +134,6 @@ const Admin: NextPage = () => {
             />
             <select
               className="select-bordered select"
-              defaultValue="Filtrar Papéis"
               onChange={(e) => setRole(e.target.value as Role)}
             >
               <option disabled>Filtrar Papéis</option>
@@ -193,7 +187,29 @@ const Admin: NextPage = () => {
                         </div>
                       </div>
                     </td>
-                    <td>{translateRole(user.role)}</td>
+                    <td>
+                      <select
+                        className="select-bordered select"
+                        onChange={(e) =>
+                          updateRole({
+                            id: user.id,
+                            role: e.target.value as Role,
+                          })
+                        }
+                      >
+                        {Object.entries(translateRoles)
+                          .sort()
+                          .map(([role, translation]) => (
+                            <option
+                              key={role}
+                              value={role}
+                              selected={user.role === role}
+                            >
+                              {translation}
+                            </option>
+                          ))}
+                      </select>
+                    </td>
                     <td>{user.email ?? ''}</td>
                     <td>
                       <input
