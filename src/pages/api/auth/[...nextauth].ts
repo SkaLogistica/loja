@@ -16,6 +16,8 @@ export const authOptions: NextAuthOptions = {
       return session
     },
     async signIn({ user }) {
+      if (user.email === env.ADMIN_EMAIL) return true
+
       const userData = await prisma.user.findFirst({
         where: {
           id: user.id,
