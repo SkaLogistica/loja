@@ -13,6 +13,7 @@ export const userRouter = router({
       z.object({
         name: z.string().optional(),
         roles: z.nativeEnum(Role).array().optional(),
+        deleted: z.boolean().default(false),
         // TODO: pagination
         // take: z.number().gte(0).optional(),
         // skip: z.number().gte(0).optional(),
@@ -27,6 +28,15 @@ export const userRouter = router({
           role: {
             in: input.roles,
           },
+          deletedAt: input.deleted
+            ? {
+                not: {
+                  equals: null,
+                },
+              }
+            : {
+                equals: null,
+              },
         },
       })
     }),
@@ -46,6 +56,16 @@ export const userRouter = router({
         data: {
           active: input.active,
           role: input.role,
+        },
+      })
+    }),
+  deleteUser: userProcedure
+    .input(z.object({ id: z.string().cuid() }))
+    .mutation(({ ctx, input }) => {
+      return ctx.prisma.user.update({
+        where: input,
+        data: {
+          deletedAt: new Date(),
         },
       })
     }),

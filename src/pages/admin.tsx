@@ -11,11 +11,13 @@ const Admin: NextPage = () => {
   const { data: sessionData } = useSession()
   const [name, setName] = useState('')
   const [role, setRole] = useState<Role | undefined>(undefined)
+  const [deletedFilter, setDeletedFilter] = useState(false)
 
   const { data: usersData } = trpc.user.getAllUsers.useQuery(
     {
       name,
       roles: role ? [role] : undefined,
+      deleted: deletedFilter,
     },
     {
       enabled: sessionData?.user !== undefined,
@@ -26,6 +28,8 @@ const Admin: NextPage = () => {
     updateUser({ id, active: !active })
   const updateRole = ({ id, role }: { id: string; role: Role }) =>
     updateUser({ id, role })
+
+  const { mutate: deleteUser } = trpc.user.deleteUser.useMutation()
 
   const translateRoles = {
     Admin: 'Administrador',
@@ -126,6 +130,14 @@ const Admin: NextPage = () => {
       <main className="flex flex-1 flex-col">
         <div className="container flex flex-col items-center justify-center gap-12 px-4 py-16 ">
           <div className="form-control flex-row items-center gap-10">
+            <button
+              className={`btn ${
+                deletedFilter ? 'btn-primary' : 'btn-secondary'
+              }`}
+              onClick={() => setDeletedFilter((old) => !old)}
+            >
+              {deletedFilter ? 'Ocultar' : 'Mostrar'} Excluídos
+            </button>
             <input
               type="text"
               placeholder="Nome"
@@ -166,9 +178,12 @@ const Admin: NextPage = () => {
                 {usersData?.map((user) => (
                   <tr key={user.id}>
                     <th>
-                      <label>
-                        <input type="checkbox" className="checkbox" />
-                      </label>
+                      <button
+                        className="btn-ghost btn hover:bg-red-500 hover:text-base-100"
+                        onClick={() => deleteUser({ id: user.id })}
+                      >
+                        Excluir
+                      </button>
                     </th>
                     <td>
                       <div className=" flex items-center space-x-3">
