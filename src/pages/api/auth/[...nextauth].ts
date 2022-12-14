@@ -15,6 +15,30 @@ export const authOptions: NextAuthOptions = {
       }
       return session
     },
+    async signIn({ user }) {
+      const userData = await prisma.user.findFirst({
+        where: {
+          id: user.id,
+          deletedAt: {
+            equals: null,
+          },
+          active: {
+            equals: true,
+          },
+        },
+      })
+
+      const isAllowedToSignIn = !!userData
+
+      if (isAllowedToSignIn) {
+        return true
+      } else {
+        // Return false to display a default error message
+        return false
+        // Or you can return a URL to redirect to:
+        // return '/unauthorized'
+      }
+    },
   },
   // Configure one or more authentication providers
   adapter: PrismaAdapter(prisma),
