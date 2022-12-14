@@ -21,6 +21,9 @@ const Admin: NextPage = () => {
       enabled: sessionData?.user !== undefined,
     }
   )
+  const { mutate: updateUserStatus } = trpc.user.updateUserStatus.useMutation()
+  const toggleStatus = ({ id, active }: { id: string; active: boolean }) =>
+    updateUserStatus({ id, active: !active })
 
   const translateRoles = {
     Admin: 'Administrador',
@@ -193,8 +196,12 @@ const Admin: NextPage = () => {
                     <td>{translateRole(user.role)}</td>
                     <td>{user.email ?? ''}</td>
                     <td>
-                      {/* TODO: implement disable user */}
-                      <input type="checkbox" className="toggle" />
+                      <input
+                        type="checkbox"
+                        className="toggle"
+                        defaultChecked={user.active}
+                        onChange={() => toggleStatus(user)}
+                      />
                     </td>
                   </tr>
                 ))}

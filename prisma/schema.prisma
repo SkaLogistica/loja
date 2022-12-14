@@ -61,6 +61,7 @@ model User {
   accounts      Account[]
   sessions      Session[]
   role          Role      @default(User)
+  active        Boolean   @default(true)
 }
 
 model VerificationToken {

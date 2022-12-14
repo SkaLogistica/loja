@@ -30,4 +30,21 @@ export const userRouter = router({
         },
       })
     }),
+  updateUserStatus: userProcedure
+    .input(
+      z.object({
+        id: z.string().cuid(),
+        active: z.boolean().default(false),
+      })
+    )
+    .mutation(({ ctx, input }) => {
+      return ctx.prisma.user.update({
+        where: {
+          id: input.id,
+        },
+        data: {
+          active: input.active,
+        },
+      })
+    }),
 })
