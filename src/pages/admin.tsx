@@ -5,13 +5,32 @@ import Head from 'next/head'
 import Image from 'next/image'
 import { signIn, signOut, useSession } from 'next-auth/react'
 
+import { Message } from '@root/components'
 import { trpc, withAuth } from '@root/utils'
+
+function formatFeedback(feedback: string) {
+  if (!feedback) return <></>
+  if (feedback.startsWith('ERRO'))
+    return (
+      <Message key={feedback} variant="error">
+        <span>{feedback}</span>
+      </Message>
+    )
+  return (
+    <Message key={feedback} variant="success">
+      <span>{feedback}</span>
+    </Message>
+  )
+}
 
 const Admin: NextPage = () => {
   const { data: sessionData } = useSession()
   const [name, setName] = useState('')
   const [role, setRole] = useState<Role | undefined>(undefined)
   const [deletedFilter, setDeletedFilter] = useState(false)
+  const [feedbacks, setFeedbacks] = useState([] as string[])
+  const addFeedback = (feedback: string) =>
+    setFeedbacks((old) => [...old, feedback])
 
   const { data: usersData } = trpc.user.getAllUsers.useQuery(
     {
@@ -23,13 +42,19 @@ const Admin: NextPage = () => {
       enabled: sessionData?.user !== undefined,
     }
   )
-  const { mutate: updateUser } = trpc.user.updateUser.useMutation()
+  const { mutate: updateUser } = trpc.user.updateUser.useMutation({
+    onSuccess: (user) => addFeedback(`Usuário ${user.name} atualizado`),
+    onError: (error) => addFeedback(`ERRO: ${error.message}`),
+  })
   const toggleStatus = ({ id, active }: { id: string; active: boolean }) =>
     updateUser({ id, active: !active })
   const updateRole = ({ id, role }: { id: string; role: Role }) =>
     updateUser({ id, role })
 
-  const { mutate: deleteUser } = trpc.user.deleteUser.useMutation()
+  const { mutate: deleteUser } = trpc.user.deleteUser.useMutation({
+    onSuccess: (user) => addFeedback(`Usuário ${user.name} deletado`),
+    onError: (error) => addFeedback(`ERRO: ${error.message}`),
+  })
 
   const translateRoles = {
     Admin: 'Administrador',
@@ -250,6 +275,9 @@ const Admin: NextPage = () => {
           </div>
         </div>
       </main>
+      <div className="toast">
+        {feedbacks.map((feedback) => formatFeedback(feedback))}
+      </div>
     </>
   )
 }
