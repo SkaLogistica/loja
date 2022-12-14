@@ -1,4 +1,5 @@
 import { Role } from '@prisma/client'
+import { TRPCError } from '@trpc/server'
 import { z } from 'zod'
 
 import { createRbacProcedure, router } from '../trpc'
@@ -6,6 +7,13 @@ import { createRbacProcedure, router } from '../trpc'
 const userProcedure = createRbacProcedure({
   requiredRoles: ['Admin', 'Moderator'],
 })
+
+enum RoleOrder {
+  Admin,
+  Editor,
+  Moderator,
+  User,
+}
 
 export const userRouter = router({
   getAllUsers: userProcedure
@@ -22,6 +30,11 @@ export const userRouter = router({
     .query(({ ctx, input }) => {
       return ctx.prisma.user.findMany({
         where: {
+          id: {
+            not: {
+              equals: ctx.session?.user?.id,
+            },
+          },
           name: {
             contains: input.name,
           },
@@ -48,7 +61,24 @@ export const userRouter = router({
         role: z.nativeEnum(Role).optional(),
       })
     )
-    .mutation(({ ctx, input }) => {
+    .mutation(async ({ ctx, input }) => {
+      const user = await ctx.prisma.user.findUnique({
+        where: { id: ctx.session?.user?.id },
+      })
+
+      if (!user) {
+        throw new TRPCError({ code: 'UNAUTHORIZED' })
+      }
+
+      /* is user changing self? */
+      if (input.id === user.id) {
+        throw new TRPCError({ code: 'UNAUTHORIZED' })
+      }
+      /* is user attempting to give role greater than self? */
+      if (input.role && RoleOrder[user.role] > RoleOrder[input.role]) {
+        throw new TRPCError({ code: 'UNAUTHORIZED' })
+      }
+
       return ctx.prisma.user.update({
         where: {
           id: input.id,
@@ -61,7 +91,20 @@ export const userRouter = router({
     }),
   deleteUser: userProcedure
     .input(z.object({ id: z.string().cuid() }))
-    .mutation(({ ctx, input }) => {
+    .mutation(async ({ ctx, input }) => {
+      const user = await ctx.prisma.user.findUnique({
+        where: { id: ctx.session?.user?.id },
+      })
+
+      if (!user) {
+        throw new TRPCError({ code: 'UNAUTHORIZED' })
+      }
+
+      /* is user changing self? */
+      if (input.id === user.id) {
+        throw new TRPCError({ code: 'UNAUTHORIZED' })
+      }
+
       return ctx.prisma.user.update({
         where: input,
         data: {
