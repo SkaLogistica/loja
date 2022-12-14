@@ -8,16 +8,16 @@ import { signIn, signOut, useSession } from 'next-auth/react'
 import { Message } from '@root/components'
 import { trpc, withAuth } from '@root/utils'
 
-function formatFeedback(feedback: string) {
+function formatFeedback(feedback: string, id: number) {
   if (!feedback) return <></>
   if (feedback.startsWith('ERRO'))
     return (
-      <Message key={feedback} variant="error">
+      <Message key={`${feedback}${id}`} variant="error">
         <span>{feedback}</span>
       </Message>
     )
   return (
-    <Message key={feedback} variant="success">
+    <Message key={`${feedback}${id}`} variant="success">
       <span>{feedback}</span>
     </Message>
   )
@@ -303,7 +303,7 @@ const Admin: NextPage = () => {
         </div>
       </main>
       <div className="toast">
-        {feedbacks.map((feedback) => formatFeedback(feedback))}
+        {feedbacks.map((feedback, idx) => formatFeedback(feedback, idx))}
       </div>
     </>
   )
