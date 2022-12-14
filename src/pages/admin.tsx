@@ -83,7 +83,10 @@ const Admin: NextPage = () => {
       return (
         <label tabIndex={0} className="btn-ghost btn-circle avatar btn">
           <div className="w-10 rounded-full">
-            <img src={url} />
+            <Image
+              src={url}
+              alt={`Imagem de perfil do usuário ${sessionData.user?.name}`}
+            />
           </div>
         </label>
       )
