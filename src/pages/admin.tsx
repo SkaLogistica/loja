@@ -32,6 +32,13 @@ const Admin: NextPage = () => {
   const addFeedback = (feedback: string) =>
     setFeedbacks((old) => [...old, feedback])
 
+  const clearFilters = () => {
+    setName('')
+    setRole(undefined)
+  }
+
+  const enableClearFilters = name !== '' || role !== undefined
+
   const { data: usersData } = trpc.user.getAllUsers.useQuery(
     {
       name,
@@ -61,6 +68,13 @@ const Admin: NextPage = () => {
     User: 'Usuário',
     Moderator: 'Moderador',
     Editor: 'Editor',
+  }
+
+  function translateRole(role: Role | undefined) {
+    if (role === undefined) {
+      return 'Filtrar Papéis'
+    }
+    return translateRoles[role]
   }
 
   const getAvatarImg = () => {
@@ -156,6 +170,13 @@ const Admin: NextPage = () => {
         <div className="container flex flex-col items-center justify-center gap-12 px-4 py-16 ">
           <div className="form-control flex-row items-center gap-10">
             <button
+              disabled={!enableClearFilters}
+              className="btn"
+              onClick={clearFilters}
+            >
+              Limpar Filtros
+            </button>
+            <button
               className={`btn ${
                 deletedFilter ? 'btn-primary' : 'btn-secondary'
               }`}
@@ -167,10 +188,13 @@ const Admin: NextPage = () => {
               type="text"
               placeholder="Nome"
               className="input-bordered input input-lg"
+              value={name}
               onChange={(e) => setName(e.target.value)}
             />
             <select
+              defaultValue={'Filtrar Papéis'}
               className="select-bordered select"
+              value={translateRole(role)}
               onChange={(e) => setRole(e.target.value as Role)}
             >
               <option disabled>Filtrar Papéis</option>
