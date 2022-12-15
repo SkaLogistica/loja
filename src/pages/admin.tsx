@@ -3,6 +3,7 @@ import type { Role } from '@prisma/client'
 import { type NextPage } from 'next'
 import Head from 'next/head'
 import Image from 'next/image'
+import Link from 'next/link'
 import { signIn, signOut, useSession } from 'next-auth/react'
 
 import { Message } from '@root/components'
@@ -25,6 +26,7 @@ function formatFeedback(feedback: string, id: number) {
 
 const Admin: NextPage = () => {
   const { data: sessionData } = useSession()
+  const [isSidePanelOpen, setSidePanelState] = useState(false)
   const [name, setName] = useState('')
   const [role, setRole] = useState<Role | undefined>(undefined)
   const [deletedFilter, setDeletedFilter] = useState(false)
@@ -113,34 +115,27 @@ const Admin: NextPage = () => {
         />
         <link rel="icon" href="/favicon.ico" />
       </Head>
-      <header className="navbar bg-base-100">
+      <nav className="navbar bg-base-100">
         <div className="navbar-start">
-          <div className="dropdown">
-            <label tabIndex={0} className="btn-ghost btn-circle btn">
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                className="h-5 w-5"
-                fill="none"
-                viewBox="0 0 24 24"
-                stroke="currentColor"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth="2"
-                  d="M4 6h16M4 12h16M4 18h7"
-                />
-              </svg>
-            </label>
-            <ul
-              tabIndex={0}
-              className="dropdown-content menu rounded-box menu-compact mt-3 w-52 bg-base-100 p-2 shadow"
+          <button
+            className="btn-ghost btn-square btn"
+            onClick={() => setSidePanelState((old) => !old)}
+          >
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              className="h-5 w-5"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
             >
-              <li>
-                <a>Usuários</a>
-              </li>
-            </ul>
-          </div>
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth="2"
+                d="M4 6h16M4 12h16M4 18h7"
+              />
+            </svg>
+          </button>
         </div>
         <div className="navbar-center">
           <a className="text-xl font-bold normal-case">Usuários</a>
@@ -168,7 +163,7 @@ const Admin: NextPage = () => {
             </ul>
           </div>
         </div>
-      </header>
+      </nav>
       <main className="flex flex-1 flex-col">
         <div className="container flex flex-col items-center justify-center gap-12 px-4 py-16 ">
           <div className="form-control flex-row items-center gap-10">
@@ -302,6 +297,54 @@ const Admin: NextPage = () => {
           </div>
         </div>
       </main>
+      <aside
+        className={`fixed top-0 overflow-auto bg-white transition-all duration-300 ease-in-out ${
+          isSidePanelOpen ? 'translate-x-0' : '-translate-x-full'
+        }`}
+      >
+        <div className="flex h-screen w-auto items-start justify-start gap-2 bg-black/50 pt-5 pl-5 pr-20">
+          <button
+            className="btn-ghost btn text-base-100"
+            onClick={() => setSidePanelState(false)}
+          >
+            Fechar
+          </button>
+          <ul className="flex h-full flex-col justify-around">
+            <li>
+              <Link
+                className="flex max-w-xs flex-col items-center gap-4 rounded-xl bg-white/10 p-4 font-bold uppercase text-white hover:bg-white/20"
+                href={'admin/empresa'}
+              >
+                <span>Empresa</span>
+              </Link>
+            </li>
+            <li>
+              <Link
+                className="flex max-w-xs flex-col items-center gap-4 rounded-xl bg-white/10 p-4 font-bold uppercase text-white hover:bg-white/20"
+                href={'admin/categorias'}
+              >
+                <span>Categorias</span>
+              </Link>
+            </li>
+            <li>
+              <Link
+                className="flex max-w-xs flex-col items-center gap-4 rounded-xl bg-white/10 p-4 font-bold uppercase text-white hover:bg-white/20"
+                href={'admin/produtos'}
+              >
+                <span>Produtos</span>
+              </Link>
+            </li>
+            <li>
+              <Link
+                className="flex max-w-xs flex-col items-center gap-4 rounded-xl bg-white/10 p-4 font-bold uppercase text-white hover:bg-white/20"
+                href={'admin/usuarios'}
+              >
+                <span>Usuários</span>
+              </Link>
+            </li>
+          </ul>
+        </div>
+      </aside>
       <div className="toast">
         {feedbacks.map((feedback, idx) => formatFeedback(feedback, idx))}
       </div>
