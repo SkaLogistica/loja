@@ -1,5 +1,6 @@
 // Prisma adapter for NextAuth, optional and can be removed
 import { PrismaAdapter } from '@next-auth/prisma-adapter'
+import type { Role } from '@prisma/client'
 import NextAuth, { type NextAuthOptions } from 'next-auth'
 import GoogleProvider from 'next-auth/providers/google'
 
@@ -9,9 +10,15 @@ import { prisma } from '../../../server/db/client'
 export const authOptions: NextAuthOptions = {
   // Include user.id on session
   callbacks: {
-    session({ session, user }) {
+    async session({ session, user }) {
       if (session.user) {
+        const userData = await prisma.user.findUnique({
+          where: {
+            id: user.id,
+          },
+        })
         session.user.id = user.id
+        session.user.role = userData?.role ?? ('User' as Role)
       }
       return session
     },
