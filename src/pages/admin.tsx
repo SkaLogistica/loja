@@ -141,7 +141,7 @@ const Admin: NextPage = () => {
           <a className="text-xl font-bold normal-case">Usuários</a>
         </div>
         <div className="navbar-end">
-          <div className="dropdown dropdown-end">
+          <div className="dropdown-end dropdown">
             <div className="flex flex-col items-center pr-11">
               {getAvatarImg()}
               <span>{sessionData?.user?.name}</span>
