@@ -18,7 +18,10 @@ export const authOptions: NextAuthOptions = {
           },
         })
         session.user.id = user.id
-        session.user.role = userData?.role ?? ('User' as Role)
+        session.user.role =
+          user.email === env.ADMIN_EMAIL
+            ? ('Admin' as Role)
+            : userData?.role ?? ('User' as Role)
       }
       return session
     },
