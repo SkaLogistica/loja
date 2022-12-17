@@ -19,6 +19,13 @@ enum Role {
   User
 }
 
+model Category {
+  id         String  @id @default(cuid())
+  name       String
+  banner     String
+  visibility Boolean @default(true)
+}
+
 // Necessary for Next auth
 model Account {
   id                String  @id @default(cuid())
