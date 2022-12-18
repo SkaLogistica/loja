@@ -246,7 +246,7 @@ const Category: NextPage = () => {
             <li>
               <Link
                 className="flex max-w-xs flex-col items-center gap-4 rounded-xl bg-white/10 p-4 font-bold uppercase text-white hover:bg-white/20"
-                href={'admin/empresa'}
+                href={'empresa'}
               >
                 <span>Empresa</span>
               </Link>
@@ -254,7 +254,7 @@ const Category: NextPage = () => {
             <li>
               <Link
                 className="flex max-w-xs flex-col items-center gap-4 rounded-xl bg-white/10 p-4 font-bold uppercase text-white hover:bg-white/20"
-                href={'admin/categorias'}
+                href={'categorias'}
               >
                 <span>Categorias</span>
               </Link>
@@ -262,7 +262,7 @@ const Category: NextPage = () => {
             <li>
               <Link
                 className="flex max-w-xs flex-col items-center gap-4 rounded-xl bg-white/10 p-4 font-bold uppercase text-white hover:bg-white/20"
-                href={'admin/produtos'}
+                href={'produtos'}
               >
                 <span>Produtos</span>
               </Link>
@@ -270,7 +270,7 @@ const Category: NextPage = () => {
             <li>
               <Link
                 className="flex max-w-xs flex-col items-center gap-4 rounded-xl bg-white/10 p-4 font-bold uppercase text-white hover:bg-white/20"
-                href={'admin/usuarios'}
+                href={'usuarios'}
               >
                 <span>Usuários</span>
               </Link>

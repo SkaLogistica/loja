@@ -190,7 +190,6 @@ const Admin: NextPage = () => {
               onChange={(e) => setName(e.target.value)}
             />
             <select
-              defaultValue={'Filtrar Papéis'}
               className="select-bordered select"
               value={translateRole(role)}
               onChange={(e) => setRole(e.target.value as Role)}
@@ -258,15 +257,12 @@ const Admin: NextPage = () => {
                             role: e.target.value as Role,
                           })
                         }
+                        defaultValue={user.role}
                       >
                         {Object.entries(translateRoles)
                           .sort()
                           .map(([role, translation]) => (
-                            <option
-                              key={role}
-                              value={role}
-                              selected={user.role === role}
-                            >
+                            <option key={role} value={role}>
                               {translation}
                             </option>
                           ))}
@@ -313,7 +309,7 @@ const Admin: NextPage = () => {
             <li>
               <Link
                 className="flex max-w-xs flex-col items-center gap-4 rounded-xl bg-white/10 p-4 font-bold uppercase text-white hover:bg-white/20"
-                href={'admin/empresa'}
+                href={'empresa'}
               >
                 <span>Empresa</span>
               </Link>
@@ -329,7 +325,7 @@ const Admin: NextPage = () => {
             <li>
               <Link
                 className="flex max-w-xs flex-col items-center gap-4 rounded-xl bg-white/10 p-4 font-bold uppercase text-white hover:bg-white/20"
-                href={'admin/produtos'}
+                href={'produtos'}
               >
                 <span>Produtos</span>
               </Link>
@@ -337,7 +333,7 @@ const Admin: NextPage = () => {
             <li>
               <Link
                 className="flex max-w-xs flex-col items-center gap-4 rounded-xl bg-white/10 p-4 font-bold uppercase text-white hover:bg-white/20"
-                href={'admin/usuarios'}
+                href={'usuarios'}
               >
                 <span>Usuários</span>
               </Link>
