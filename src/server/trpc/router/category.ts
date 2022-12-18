@@ -24,13 +24,13 @@ export const categoryRouter = router({
     )
     .query(({ ctx, input }) => {
       return ctx.prisma.category.findMany({
-        where: {
-          name: input.name
-            ? {
+        where: input.name
+          ? {
+              name: {
                 contains: input.name,
-              }
-            : undefined,
-        },
+              },
+            }
+          : undefined,
       })
     }),
   createCategory: categoryProcedure
