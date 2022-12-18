@@ -28,31 +28,75 @@ const Category: NextPage = () => {
   const [isSidePanelOpen, setSidePanelState] = useState(false)
   const [name, setName] = useState('')
   const [feedbacks, setFeedbacks] = useState([] as string[])
+  const [file, setFile] = useState<File | undefined>(undefined)
+  const [fileUrl, setFileUrl] = useState<string | undefined>(undefined)
+  const [editId, setEditId] = useState('')
   const addFeedback = (feedback: string) =>
     setFeedbacks((old) => [...old, feedback])
 
   const clearFilters = () => {
     setName('')
+    setEditId('')
+    setFile(undefined)
+    setFileUrl(undefined)
   }
 
-  const enableClearFilters = name !== ''
+  const utils = trpc.useContext()
+  const enableClearFilters =
+    name !== '' || file !== undefined || fileUrl !== undefined
+  const enableCreateCategory = name !== '' && file !== undefined
 
-  const { data: categoriesData } = trpc.category.getAllCategories.useQuery(
-    {
-      name,
-    },
-    {
-      enabled: sessionData?.user !== undefined,
+  const uploadFile = async () => {
+    if (file === undefined) return false
+
+    const url = await utils.aws.getUploadUrl.fetch({
+      name: `categorias/${file.name}`,
+    })
+
+    const response = await fetch(url, {
+      method: 'PUT',
+      headers: {
+        'Content-Type': file.type,
+        'Access-Control-Allow-Origin': '*',
+      },
+      body: file,
+    })
+
+    if (response.ok) {
+      addFeedback('Foto carregada com sucesso')
+      return true
     }
-  )
+    addFeedback('ERRO: Envio da Foto não concluído')
+    return false
+  }
+
+  const { data: categoriesData, refetch: reloadCategories } =
+    trpc.category.getAllCategories.useQuery(
+      editId || file
+        ? {}
+        : {
+            name,
+          },
+      {
+        enabled: sessionData?.user !== undefined,
+      }
+    )
+
   const { mutate: createCategory } = trpc.category.createCategory.useMutation({
-    onSuccess: (category) => addFeedback(`Categoria ${category.name} criada`),
+    onSuccess: (category) => {
+      addFeedback(`Categoria ${category.name} criada`)
+      clearFilters()
+      reloadCategories()
+    },
     onError: (error) => addFeedback(`ERRO: ${error.message}`),
   })
 
   const { mutate: updateCategory } = trpc.category.updateCategory.useMutation({
-    onSuccess: (category) =>
-      addFeedback(`Categoria ${category.name} atualizado`),
+    onSuccess: (category) => {
+      addFeedback(`Categoria ${category.name} atualizado`)
+      setEditId('')
+      reloadCategories()
+    },
     onError: (error) => addFeedback(`ERRO: ${error.message}`),
   })
   const toggleVisibility = ({
@@ -154,7 +198,7 @@ const Category: NextPage = () => {
         </div>
       </nav>
       <main className="flex flex-1 flex-col">
-        <div className="container flex flex-col items-center justify-center gap-12 px-4 py-16 ">
+        <div className="justify-center container flex flex-col items-center gap-12 px-4 py-16 ">
           <div className="form-control flex-row items-center gap-10">
             <button
               disabled={!enableClearFilters}
@@ -163,6 +207,65 @@ const Category: NextPage = () => {
             >
               Limpar Filtros
             </button>
+            <label
+              className="justify-center flex h-20 w-64 cursor-pointer items-center rounded border border-solid border-black object-cover text-lg"
+              htmlFor="add-single-img"
+            >
+              {fileUrl ? (
+                <Image
+                  src={fileUrl}
+                  alt="Imagem selecionada para categoria"
+                  width={256}
+                  height={64}
+                  className="rounded"
+                />
+              ) : (
+                <div className="justify-center flex items-center gap-2">
+                  Banner
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="24"
+                    height="24"
+                    fill="#000000"
+                    viewBox="0 0 256 256"
+                  >
+                    <rect width="256" height="256" fill="none"></rect>
+                    <path
+                      d="M208,208H48a16,16,0,0,1-16-16V80A16,16,0,0,1,48,64H80L96,40h64l16,24h32a16,16,0,0,1,16,16V192A16,16,0,0,1,208,208Z"
+                      fill="none"
+                      stroke="#000000"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      stroke-width="16"
+                    ></path>
+                    <circle
+                      cx="128"
+                      cy="132"
+                      r="36"
+                      fill="none"
+                      stroke="#000000"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      stroke-width="16"
+                    ></circle>
+                  </svg>
+                </div>
+              )}
+            </label>
+            <input
+              type="file"
+              id="add-single-img"
+              accept="image/png, image/jpeg"
+              className="hidden"
+              alt="Selecione a foto da categoria"
+              onChange={(e) => {
+                if (e.target.files !== null && e.target.files.length > 0) {
+                  const fileData = e.target.files[0]
+                  setFile(fileData)
+                  setFileUrl(URL.createObjectURL(fileData!))
+                }
+              }}
+            />
             <input
               type="text"
               placeholder="Nome"
@@ -170,17 +273,39 @@ const Category: NextPage = () => {
               value={name}
               onChange={(e) => setName(e.target.value)}
             />
-            <button
-              disabled={!enableClearFilters}
-              className="btn"
-              onClick={() =>
-                createCategory({
-                  name,
-                })
-              }
-            >
-              Nova Categoria
-            </button>
+            {editId ? (
+              <button
+                disabled={!editId}
+                className="btn"
+                onClick={() => {
+                  uploadFile()
+                  updateCategory({
+                    id: editId,
+                    name,
+                    bannerFileName: file
+                      ? `categorias/${file.name}`
+                      : undefined,
+                  })
+                }}
+              >
+                Editar Categoria
+              </button>
+            ) : (
+              <button
+                disabled={!enableCreateCategory}
+                className="btn"
+                onClick={() => {
+                  if (file === undefined) return
+                  if (!uploadFile()) return
+                  createCategory({
+                    name,
+                    bannerFileName: `categorias/${file.name}`,
+                  })
+                }}
+              >
+                Nova Categoria
+              </button>
+            )}
           </div>
           <div className="overflow-x-auto">
             <table className="table w-1/2">
@@ -192,6 +317,7 @@ const Category: NextPage = () => {
                       {/* <input type="checkbox" className="checkbox" disabled /> */}
                     </label>
                   </th>
+                  <th>Banner</th>
                   <th>Nome</th>
                   <th>Visibilidade</th>
                 </tr>
@@ -206,7 +332,29 @@ const Category: NextPage = () => {
                       >
                         Excluir
                       </button>
+                      <button
+                        className="btn-ghost btn hover:bg-primary hover:text-base-100"
+                        onClick={() => {
+                          setEditId(category.id)
+                          setFileUrl(category.bannerUrl)
+                          setName(category.name)
+                        }}
+                      >
+                        Editar
+                      </button>
                     </th>
+                    <td>
+                      <button className="btn-ghost btn lowercase">
+                        <a
+                          href={category.bannerUrl ?? '#'}
+                          className="link"
+                          target="_blank"
+                          rel="noreferrer"
+                        >
+                          {category.bannerUrl.split('/').pop()}
+                        </a>
+                      </button>
+                    </td>
                     <td>{category.name ?? ''}</td>
                     <td>
                       <input
@@ -222,6 +370,7 @@ const Category: NextPage = () => {
               <tfoot>
                 <tr>
                   <th></th>
+                  <th>Banner</th>
                   <th>Nome</th>
                   <th>Visibilidade</th>
                 </tr>

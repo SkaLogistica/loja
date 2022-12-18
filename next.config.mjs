@@ -14,7 +14,10 @@ const config = {
     defaultLocale: 'pt-BR',
   },
   images: {
-    domains: ['lh3.googleusercontent.com'],
+    domains: [
+      'lh3.googleusercontent.com',
+      'skalogisticalojaverceltmt.s3.sa-east-1.amazonaws.com',
+    ],
   },
 }
 export default config
