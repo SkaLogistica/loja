@@ -22,7 +22,7 @@ enum Role {
 model Category {
   id         String  @id @default(cuid())
   name       String
-  banner     String
+  bannerUrl  String
   visibility Boolean @default(true)
 }
 

@@ -1,10 +1,16 @@
 import { z } from 'zod'
 
+import { env } from '@root/env/server.mjs'
+
 import { createRbacProcedure, router } from '../trpc'
 
 const categoryProcedure = createRbacProcedure({
   requiredRoles: ['Admin', 'Editor'],
 })
+
+function formatAWSfileUrl(filename: string) {
+  return `https://${env.AWS_BUCKET_NAME}.s3.${env.AWS_REGION}.amazonaws.com/${filename}`
+}
 
 export const categoryRouter = router({
   getAllCategories: categoryProcedure
@@ -31,13 +37,14 @@ export const categoryRouter = router({
     .input(
       z.object({
         name: z.string(),
+        bannerFileName: z.string(),
       })
     )
     .mutation(({ ctx, input }) => {
       return ctx.prisma.category.create({
         data: {
           name: input.name,
-          banner: 'link aws',
+          bannerUrl: formatAWSfileUrl(input.bannerFileName),
         },
       })
     }),
@@ -46,6 +53,7 @@ export const categoryRouter = router({
       z.object({
         id: z.string().cuid(),
         name: z.string().optional(),
+        bannerFileName: z.string().optional(),
         visibility: z.boolean().optional(),
       })
     )
@@ -56,6 +64,9 @@ export const categoryRouter = router({
         },
         data: {
           name: input.name,
+          bannerUrl: input.bannerFileName
+            ? formatAWSfileUrl(input.bannerFileName)
+            : undefined,
           visibility: input.visibility,
         },
       })
