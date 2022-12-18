@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import type { Category as PrismaCategory } from '@prisma/client'
 import { type NextPage } from 'next'
 import Head from 'next/head'
 import Image from 'next/image'
@@ -135,6 +136,43 @@ const Category: NextPage = () => {
           <span className="text-3xl">K</span>
         </div>
       </label>
+    )
+  }
+
+  function formatSubCategories(category: PrismaCategory) {
+    const subcategories = /* category.subcategories */ [
+      { name: 't1' },
+      { name: 't2' },
+      { name: 't3' },
+      { name: 't3' },
+      { name: 't3' },
+      { name: 't3' },
+      { name: 't3' },
+      { name: 't3' },
+      { name: 't3' },
+      { name: 't3' },
+      { name: 't3' },
+      { name: 't3' },
+      { name: 't3' },
+      { name: 't3' },
+    ]
+      .map(({ name }) => name)
+      .join(', ')
+
+    return (
+      <div className="tooltip tooltip-primary" data-tip={subcategories}>
+        <button className="btn-ghost btn lowercase">
+          <Link
+            href={`categorias/${category.id}`}
+            className="link"
+            target="_blank"
+          >
+            {subcategories.length > 10
+              ? `${subcategories.substring(0, 10)}...`
+              : subcategories}
+          </Link>
+        </button>
+      </div>
     )
   }
 
@@ -312,13 +350,12 @@ const Category: NextPage = () => {
               <thead>
                 <tr>
                   <th>
-                    <label>
-                      {/* TODO: implement select all */}
-                      {/* <input type="checkbox" className="checkbox" disabled /> */}
-                    </label>
+                    {/* TODO: implement select all */}
+                    {/* <input type="checkbox" className="checkbox" disabled /> */}
                   </th>
                   <th>Banner</th>
                   <th>Nome</th>
+                  <th>Subcategorias</th>
                   <th>Visibilidade</th>
                 </tr>
               </thead>
@@ -356,6 +393,7 @@ const Category: NextPage = () => {
                       </button>
                     </td>
                     <td>{category.name ?? ''}</td>
+                    <td>{formatSubCategories(category)}</td>
                     <td>
                       <input
                         type="checkbox"
@@ -372,6 +410,7 @@ const Category: NextPage = () => {
                   <th></th>
                   <th>Banner</th>
                   <th>Nome</th>
+                  <th>Subcategorias</th>
                   <th>Visibilidade</th>
                 </tr>
               </tfoot>
