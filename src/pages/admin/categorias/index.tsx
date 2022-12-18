@@ -1,5 +1,4 @@
 import { useState } from 'react'
-import type { Category as PrismaCategory } from '@prisma/client'
 import { type NextPage } from 'next'
 import Head from 'next/head'
 import Image from 'next/image'
@@ -139,23 +138,11 @@ const Category: NextPage = () => {
     )
   }
 
-  function formatSubCategories(category: PrismaCategory) {
-    const subcategories = /* category.subcategories */ [
-      { name: 't1' },
-      { name: 't2' },
-      { name: 't3' },
-      { name: 't3' },
-      { name: 't3' },
-      { name: 't3' },
-      { name: 't3' },
-      { name: 't3' },
-      { name: 't3' },
-      { name: 't3' },
-      { name: 't3' },
-      { name: 't3' },
-      { name: 't3' },
-      { name: 't3' },
-    ]
+  function formatSubCategories(category: {
+    id: string
+    subcategories: { name: string }[]
+  }) {
+    const subcategories = category.subcategories
       .map(({ name }) => name)
       .join(', ')
 
@@ -165,7 +152,7 @@ const Category: NextPage = () => {
           <Link
             href={`categorias/${category.id}`}
             className="link"
-            target="_blank"
+            // NOTE: DEBUG target="_blank"
           >
             {subcategories.length > 10
               ? `${subcategories.substring(0, 10)}...`

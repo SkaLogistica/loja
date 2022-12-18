@@ -4,7 +4,7 @@ import { env } from '@root/env/server.mjs'
 
 import { createRbacProcedure, router } from '../trpc'
 
-const categoryProcedure = createRbacProcedure({
+export const categoryProcedure = createRbacProcedure({
   requiredRoles: ['Admin', 'Editor'],
 })
 
@@ -31,6 +31,9 @@ export const categoryRouter = router({
               },
             }
           : undefined,
+        include: {
+          subcategories: true,
+        },
       })
     }),
   createCategory: categoryProcedure

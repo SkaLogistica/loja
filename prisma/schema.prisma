@@ -20,10 +20,19 @@ enum Role {
 }
 
 model Category {
-  id         String  @id @default(cuid())
+  id            String        @id @default(cuid())
+  name          String
+  bannerUrl     String
+  visibility    Boolean       @default(true)
+  subcategories SubCategory[]
+}
+
+model SubCategory {
+  id         String   @id @default(cuid())
   name       String
-  bannerUrl  String
-  visibility Boolean @default(true)
+  visibility Boolean  @default(true)
+  parent     Category @relation(fields: [parentId], references: [id])
+  parentId   String
 }
 
 // Necessary for Next auth
