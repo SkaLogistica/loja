@@ -165,7 +165,7 @@ const Admin: NextPage = () => {
         </div>
       </nav>
       <main className="flex flex-1 flex-col">
-        <div className="container flex flex-col items-center justify-center gap-12 px-4 py-16 ">
+        <div className="justify-center container flex flex-col items-center gap-12 px-4 py-16 ">
           <div className="form-control flex-row items-center gap-10">
             <button
               disabled={!enableClearFilters}
