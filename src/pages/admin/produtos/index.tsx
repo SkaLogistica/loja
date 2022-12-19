@@ -5,11 +5,7 @@ import Image from 'next/image'
 import Link from 'next/link'
 import { signIn, signOut, useSession } from 'next-auth/react'
 
-import {
-  currencyFormatter,
-  trpc,
-  useFeedback /* withAuth */,
-} from '@root/utils'
+import { currencyFormatter, trpc, useFeedback, withAuth } from '@root/utils'
 
 const Produtos: NextPage = () => {
   const { data: sessionData } = useSession()
@@ -353,4 +349,4 @@ const Produtos: NextPage = () => {
   )
 }
 
-export default Produtos // withAuth(Produtos, ['Admin', 'Editor'])
+export default withAuth(Produtos, ['Admin', 'Editor'])
