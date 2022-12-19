@@ -7,7 +7,7 @@ import { useRouter } from 'next/router'
 import { signIn, signOut, useSession } from 'next-auth/react'
 
 import { Message } from '@root/components'
-import { trpc, withAuth } from '@root/utils'
+import { stringifyQueryParam, trpc, withAuth } from '@root/utils'
 
 function formatFeedback(feedback: string, id: number) {
   if (!feedback) return <></>
@@ -22,12 +22,6 @@ function formatFeedback(feedback: string, id: number) {
       <span>{feedback}</span>
     </Message>
   )
-}
-
-function stringifyQueryParam(arg: string[] | string | undefined) {
-  if (arg === undefined) return ''
-  if (Array.isArray(arg)) return arg[0] ?? ''
-  return arg
 }
 
 const CategoryId: NextPage = () => {
