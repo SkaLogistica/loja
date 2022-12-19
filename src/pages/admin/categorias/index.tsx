@@ -223,7 +223,7 @@ const Category: NextPage = () => {
         </div>
       </nav>
       <main className="flex flex-1 flex-col">
-        <div className="justify-center container flex flex-col items-center gap-12 px-4 py-16 ">
+        <div className="container flex flex-col items-center justify-center gap-12 px-4 py-16 ">
           <div className="form-control flex-row items-center gap-10">
             <button
               disabled={!enableClearFilters}
@@ -233,7 +233,7 @@ const Category: NextPage = () => {
               Limpar Filtros
             </button>
             <label
-              className="justify-center flex h-20 w-64 cursor-pointer items-center rounded border border-solid border-black object-cover text-lg"
+              className="flex h-20 w-64 cursor-pointer items-center justify-center rounded border border-solid border-black object-cover text-lg"
               htmlFor="add-single-img"
             >
               {fileUrl ? (
@@ -245,7 +245,7 @@ const Category: NextPage = () => {
                   className="rounded"
                 />
               ) : (
-                <div className="justify-center flex items-center gap-2">
+                <div className="flex items-center justify-center gap-2">
                   Banner
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
