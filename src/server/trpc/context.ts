@@ -3,7 +3,7 @@ import { type CreateNextContextOptions } from '@trpc/server/adapters/next'
 import { type Session } from 'next-auth'
 
 import { s3Client } from '../aws/client'
-import { getServerAuthSession } from '../common/get-server-auth-session'
+import { getServerAuthSession } from '../common'
 import { prisma } from '../db/client'
 
 interface CreateContextOptions {

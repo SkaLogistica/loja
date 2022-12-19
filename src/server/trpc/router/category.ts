@@ -1,16 +1,12 @@
 import { z } from 'zod'
 
-import { env } from '@root/env/server.mjs'
+import { formatAWSfileUrl } from '@root/server/common'
 
 import { createRbacProcedure, router } from '../trpc'
 
 export const categoryProcedure = createRbacProcedure({
   requiredRoles: ['Admin', 'Editor'],
 })
-
-function formatAWSfileUrl(filename: string) {
-  return `https://${env.AWS_BUCKET_NAME}.s3.${env.AWS_REGION}.amazonaws.com/${filename}`
-}
 
 export const categoryRouter = router({
   getAllCategories: categoryProcedure
