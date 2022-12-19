@@ -4,7 +4,7 @@ import Head from 'next/head'
 import Image from 'next/image'
 import Link from 'next/link'
 import { useRouter } from 'next/router'
-import { useSession } from 'next-auth/react'
+import { signIn, signOut, useSession } from 'next-auth/react'
 
 import { Message } from '@root/components'
 import { trpc, withAuth } from '@root/utils'
@@ -24,10 +24,16 @@ function formatFeedback(feedback: string, id: number) {
   )
 }
 
+function stringifyQueryParam(arg: string[] | string | undefined) {
+  if (arg === undefined) return ''
+  if (Array.isArray(arg)) return arg[0] ?? ''
+  return arg
+}
+
 const CategoryId: NextPage = () => {
   const { data: sessionData } = useSession()
   const router = useRouter()
-  const { id } = router.query
+  const id = stringifyQueryParam(router.query.id)
   const [feedbacks, setFeedbacks] = useState([] as string[])
   const [name, setName] = useState('')
   const addFeedback = (feedback: string) =>
@@ -41,7 +47,7 @@ const CategoryId: NextPage = () => {
     trpc.subCategory.getAllSubCategories.useQuery(
       {
         name: name !== '' ? name : undefined,
-        categoryId: id!,
+        categoryId: id,
       },
       {
         enabled: sessionData?.user !== undefined && id !== undefined,
@@ -173,7 +179,7 @@ const CategoryId: NextPage = () => {
         </div>
       </nav>
       <main className="flex flex-1 flex-col">
-        <div className="justify-center container flex flex-col items-center gap-12 px-4 py-16 ">
+        <div className="container flex flex-col items-center justify-center gap-12 px-4 py-16 ">
           <div className="form-control flex-row items-center gap-10">
             <input
               type="text"
@@ -188,13 +194,12 @@ const CategoryId: NextPage = () => {
               onClick={() =>
                 createSubCategory({
                   name,
-                  parentId: id!,
+                  parentId: id,
                 })
               }
             >
               Nova SubCategoria
             </button>
-            {/* )} */}
           </div>
           <div className="overflow-x-auto">
             <table className="table w-1/2">
