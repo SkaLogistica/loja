@@ -25,14 +25,37 @@ model Category {
   bannerUrl     String
   visibility    Boolean       @default(true)
   subcategories SubCategory[]
+  products      Product[]
 }
 
 model SubCategory {
-  id         String   @id @default(cuid())
+  id         String    @id @default(cuid())
   name       String
-  visibility Boolean  @default(true)
-  parent     Category @relation(fields: [parentId], references: [id])
+  visibility Boolean   @default(true)
+  parent     Category  @relation(fields: [parentId], references: [id])
   parentId   String
+  products   Product[]
+}
+
+model Product {
+  id            String        @id @default(cuid())
+  name          String
+  description   String?
+  price         Decimal?
+  visibility    Boolean       @default(false)
+  hiddenPrice   Boolean       @default(true)
+  available     Boolean       @default(false)
+  photos        Photo[]
+  category      Category?     @relation(fields: [categoryId], references: [id])
+  categoryId    String?
+  subcategories SubCategory[]
+}
+
+model Photo {
+  id        String   @id @default(cuid())
+  url       String
+  product   Product? @relation(fields: [productId], references: [id])
+  productId String?
 }
 
 // Necessary for Next auth

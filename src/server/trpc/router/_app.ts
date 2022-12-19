@@ -3,6 +3,7 @@ import { router } from '../trpc'
 import { authRouter } from './auth'
 import { awsRouter } from './aws'
 import { categoryRouter } from './category'
+import { productRouter } from './product'
 import { subCategoryRouter } from './subcategory'
 import { userRouter } from './user'
 
@@ -12,6 +13,7 @@ export const appRouter = router({
   user: userRouter,
   category: categoryRouter,
   subCategory: subCategoryRouter,
+  product: productRouter,
 })
 
 // export type definition of API
