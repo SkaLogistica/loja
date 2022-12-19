@@ -54,6 +54,7 @@ model Product {
 model Photo {
   id        String   @id @default(cuid())
   url       String
+  name      String
   product   Product? @relation(fields: [productId], references: [id])
   productId String?
 }

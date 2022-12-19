@@ -49,6 +49,7 @@ export const productRouter = router({
         include: {
           category: true,
           subcategories: true,
+          photos: true,
         },
       })
     }),
@@ -102,6 +103,7 @@ export const productRouter = router({
                 createMany: {
                   data: input.photosFilenames.map((filename) => ({
                     url: formatAWSfileUrl(filename),
+                    name: filename,
                   })),
                 },
               }
@@ -162,6 +164,7 @@ export const productRouter = router({
                 createMany: {
                   data: input.photosFilenames.map((filename) => ({
                     url: formatAWSfileUrl(filename),
+                    name: filename,
                   })),
                 },
               }
