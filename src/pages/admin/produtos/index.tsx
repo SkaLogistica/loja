@@ -5,7 +5,11 @@ import Image from 'next/image'
 import Link from 'next/link'
 import { signIn, signOut, useSession } from 'next-auth/react'
 
-import { trpc, useFeedback, withAuth } from '@root/utils'
+import {
+  currencyFormatter,
+  trpc,
+  useFeedback /* withAuth */,
+} from '@root/utils'
 
 const Produtos: NextPage = () => {
   const { data: sessionData } = useSession()
@@ -115,15 +119,6 @@ const Produtos: NextPage = () => {
           : subcategories}
       </div>
     )
-  }
-
-  function Currency({ value }: { value: number }) {
-    const { format: formatter } = new Intl.NumberFormat('pt-BR', {
-      style: 'currency',
-      currency: 'BRL',
-    })
-
-    return <>{formatter(value)}</>
   }
 
   return (
@@ -248,19 +243,17 @@ const Produtos: NextPage = () => {
                             href={`produtos/${product.id}`}
                             className="link"
                             // NOTE: DEBUG target="_blank"
-                            target="_blank"
                           >
                             {product.name ?? ''}
                           </Link>
                         </button>
                       </div>
                     </td>
-                    <td>{product.category?.name ?? ''}</td>
                     <td>
-                      {product.price && (
-                        <Currency value={product.price.toNumber()} />
-                      )}
+                      {product.price &&
+                        currencyFormatter(Number(product.price))}
                     </td>
+                    <td>{product.category?.name ?? ''}</td>
                     <td>
                       <SubCategories list={product.subcategories} />
                     </td>
@@ -360,4 +353,4 @@ const Produtos: NextPage = () => {
   )
 }
 
-export default withAuth(Produtos, ['Admin', 'Editor'])
+export default Produtos // withAuth(Produtos, ['Admin', 'Editor'])
