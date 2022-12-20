@@ -35,7 +35,7 @@ const EditarProduto: NextPage = () => {
   const [price, setPrice] = useState('')
   const [description, setDescription] = useState('')
   const [categoryId, setCategoryId] = useState('')
-  const [subCategoriesSet, setSubCategoriesSet] = useState(new Set<string>())
+  const [subCategoryId, setSubCategoryId] = useState('')
   const [visibility, setVisibility] = useState(false)
   const [hiddenPrice, setHiddenPrice] = useState(false)
   const [available, setAvailable] = useState(false)
@@ -58,11 +58,6 @@ const EditarProduto: NextPage = () => {
   const deleteFile = ({ url }: { file?: File; url: string }) =>
     setFiles((old) => old.filter(({ url: arrUrl }) => arrUrl !== url))
 
-  const toggleSubCategory = (id: string) =>
-    subCategoriesSet.has(id)
-      ? subCategoriesSet.delete(id)
-      : subCategoriesSet.add(id)
-
   const isLocalUrl = (url: string) => url.startsWith('blob')
 
   const { data: product } = trpc.product.getProduct.useQuery(
@@ -80,7 +75,7 @@ const EditarProduto: NextPage = () => {
         setPrice(product.price ? currencyFormatter(Number(product.price)) : '')
         setDescription(product.description ?? '')
         setCategoryId(product.categoryId ?? '')
-        setSubCategoriesSet(new Set(product.subcategories.map(({ id }) => id)))
+        setSubCategoryId(product.subCategoryId ?? '')
         product.photos.map(({ id, url }) => addFile({ id, url }))
       },
     }
@@ -195,7 +190,7 @@ const EditarProduto: NextPage = () => {
       <main className="flex flex-1 flex-col">
         <div className="container flex flex-col items-center justify-center gap-12 px-4 py-16 ">
           <form
-            className="form-control items-center gap-10"
+            className="form-control grid grid-cols-2  items-center gap-10"
             onSubmit={async (e) => {
               e.preventDefault()
 
@@ -222,7 +217,7 @@ const EditarProduto: NextPage = () => {
                 price: `${utilsBr.currencyToNumber(price)}` || undefined,
                 description: description || undefined,
                 categoryId: categoryId || undefined,
-                subcategoriesIds: Array.from(subCategoriesSet),
+                subcategoryId: subCategoryId || undefined,
                 visibility,
                 available,
                 hiddenPrice,
@@ -232,13 +227,6 @@ const EditarProduto: NextPage = () => {
               })
             }}
           >
-            <input
-              type="text"
-              placeholder="Nome"
-              className="input-bordered input input-lg"
-              value={name ?? product?.name}
-              onChange={(e) => setName(e.target.value)}
-            />
             {/* TODO: mask and parse currency input */}
             <div className="flex gap-10">
               {Array.from(files).map(({ file, url, id: photoId }) => (
@@ -332,6 +320,13 @@ const EditarProduto: NextPage = () => {
             />
             <input
               type="text"
+              placeholder="Nome"
+              className="input-bordered input input-lg"
+              value={name ?? product?.name}
+              onChange={(e) => setName(e.target.value)}
+            />
+            <input
+              type="text"
               placeholder="Preço"
               className="input-bordered input text-lg"
               value={price}
@@ -357,26 +352,23 @@ const EditarProduto: NextPage = () => {
                 </option>
               ))}
             </select>
-            <span> SubCategorias </span>
-            <ul>
+            <select
+              className="select-bordered select"
+              value={subCategoryId}
+              onChange={(e) => setSubCategoryId(e.target.value)}
+            >
+              <option value="" disabled>
+                SubCategorias
+              </option>
               {categoriesData
                 ?.filter(({ id }) => id === categoryId)
                 .pop()
                 ?.subcategories.map((subcategory) => (
-                  <div
-                    key={subcategory.id}
-                    className="label cursor-pointer gap-2"
-                  >
-                    <input
-                      id={subcategory.id}
-                      type="checkbox"
-                      defaultChecked={subCategoriesSet.has(subcategory.id)}
-                      onChange={() => toggleSubCategory(subcategory.id)}
-                    />
-                    <label htmlFor={subcategory.id}>{subcategory.name}</label>
-                  </div>
+                  <option key={subcategory.id} value={subcategory.id}>
+                    {subcategory.name}
+                  </option>
                 ))}
-            </ul>
+            </select>
             <div className="flex flex-row gap-2">
               <div className="label cursor-pointer gap-2">
                 <label htmlFor="available" className="label-text">

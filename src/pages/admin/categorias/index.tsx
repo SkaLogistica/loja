@@ -142,9 +142,9 @@ const Category: NextPage = () => {
     id: string
     subcategories: { name: string }[]
   }) {
-    const subcategories = category.subcategories
-      .map(({ name }) => name)
-      .join(', ')
+    const subcategories =
+      category.subcategories.map(({ name }) => name).join(', ') ||
+      'Clique para adicionar'
 
     return (
       <div className="tooltip tooltip-primary" data-tip={subcategories}>

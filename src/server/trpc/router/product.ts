@@ -48,7 +48,7 @@ export const productRouter = router({
         where: input,
         include: {
           category: true,
-          subcategories: true,
+          subCategory: true,
           photos: true,
         },
       })
@@ -75,7 +75,7 @@ export const productRouter = router({
           )
           .optional(),
         categoryId: z.string().cuid().optional(),
-        subcategoriesIds: z.string().cuid().array().optional(),
+        subcategoryId: z.string().cuid().optional(),
         photosFilenames: z.string().array().optional(),
       })
     )
@@ -93,9 +93,9 @@ export const productRouter = router({
                 connect: { id: input.categoryId },
               }
             : undefined,
-          subcategories: input.subcategoriesIds
+          subCategory: input.subcategoryId
             ? {
-                connect: input.subcategoriesIds.map((id) => ({ id })),
+                connect: { id: input.subcategoryId },
               }
             : undefined,
           photos: input.photosFilenames
@@ -135,7 +135,7 @@ export const productRouter = router({
           )
           .optional(),
         categoryId: z.string().cuid().optional(),
-        subcategoriesIds: z.string().cuid().array().optional(),
+        subcategoryId: z.string().cuid().optional(),
         photosFilenames: z.string().array().optional(),
       })
     )
@@ -154,9 +154,9 @@ export const productRouter = router({
                 connect: { id: input.categoryId },
               }
             : undefined,
-          subcategories: input.subcategoriesIds
+          subCategory: input.subcategoryId
             ? {
-                connect: input.subcategoriesIds.map((id) => ({ id })),
+                connect: { id: input.subcategoryId },
               }
             : undefined,
           photos: input.photosFilenames

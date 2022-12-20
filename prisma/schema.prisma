@@ -38,17 +38,18 @@ model SubCategory {
 }
 
 model Product {
-  id            String        @id @default(cuid())
+  id            String       @id @default(cuid())
   name          String
   description   String?
   price         Decimal?
-  visibility    Boolean       @default(false)
-  hiddenPrice   Boolean       @default(true)
-  available     Boolean       @default(false)
+  visibility    Boolean      @default(false)
+  hiddenPrice   Boolean      @default(true)
+  available     Boolean      @default(false)
   photos        Photo[]
-  category      Category?     @relation(fields: [categoryId], references: [id])
+  category      Category?    @relation(fields: [categoryId], references: [id])
   categoryId    String?
-  subcategories SubCategory[]
+  subCategory   SubCategory? @relation(fields: [subCategoryId], references: [id])
+  subCategoryId String?
 }
 
 model Photo {

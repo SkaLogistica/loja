@@ -102,21 +102,6 @@ const Produtos: NextPage = () => {
     )
   }
 
-  function SubCategories({ list }: { list: { name: string }[] }) {
-    const subcategories = list.map(({ name }) => name).join(', ')
-
-    return (
-      <div
-        className="tooltip tooltip-primary lowercase"
-        data-tip={subcategories}
-      >
-        {subcategories.length > 10
-          ? `${subcategories.substring(0, 10)}...`
-          : subcategories}
-      </div>
-    )
-  }
-
   return (
     <>
       <Head>
@@ -212,7 +197,7 @@ const Produtos: NextPage = () => {
                   <th>Nome</th>
                   <th>Preço</th>
                   <th>Categoria</th>
-                  <th>SubCategorias</th>
+                  <th>SubCategoria</th>
                   <th>Em Estoque</th>
                   <th>Mostrar Preço</th>
                   <th>Exibir Produto</th>
@@ -250,9 +235,7 @@ const Produtos: NextPage = () => {
                         currencyFormatter(Number(product.price))}
                     </td>
                     <td>{product.category?.name ?? ''}</td>
-                    <td>
-                      <SubCategories list={product.subcategories} />
-                    </td>
+                    <td>{product.subCategory?.name ?? ''}</td>
                     <td>
                       <input
                         type="checkbox"
@@ -286,7 +269,7 @@ const Produtos: NextPage = () => {
                   <th>Nome</th>
                   <th>Preço</th>
                   <th>Categoria</th>
-                  <th>SubCategorias</th>
+                  <th>SubCategoria</th>
                   <th>Em Estoque</th>
                   <th>Mostrar Preço</th>
                   <th>Exibir Produto</th>
