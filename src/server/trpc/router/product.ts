@@ -15,26 +15,40 @@ export const productRouter = router({
     .input(
       z.object({
         name: z.string().optional(),
-        // categories: z.string().array().optional(),
-        // subcategories: z.string().array().optional(),
-        // TODO: pagination
-        // take: z.number().gte(0).optional(),
-        // skip: z.number().gte(0).optional(),
+        categoryId: z.string().cuid().optional(),
+        subCategoryId: z.string().cuid().optional(),
+        take: z.number().gte(0).optional(),
+        skip: z.number().gte(0).optional(),
       })
     )
     .query(({ ctx, input }) => {
       return ctx.prisma.product.findMany({
-        where: input.name
-          ? {
-              name: {
-                contains: input.name,
-              },
-            }
-          : undefined,
+        where:
+          input.name || input.categoryId || input.subCategoryId
+            ? {
+                name: input.name
+                  ? {
+                      contains: input.name,
+                    }
+                  : undefined,
+                categoryId: input.categoryId
+                  ? {
+                      equals: input.categoryId,
+                    }
+                  : undefined,
+                subCategoryId: input.subCategoryId
+                  ? {
+                      equals: input.subCategoryId,
+                    }
+                  : undefined,
+              }
+            : undefined,
         include: {
           category: true,
-          subcategories: true,
+          subCategory: true,
         },
+        take: input.take,
+        skip: input.skip,
       })
     }),
   getProduct: productProcedure

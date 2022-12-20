@@ -10,18 +10,31 @@ import { currencyFormatter, trpc, useFeedback, withAuth } from '@root/utils'
 const Produtos: NextPage = () => {
   const { data: sessionData } = useSession()
   const [name, setName] = useState('')
+  const [categoryId, setCategoryId] = useState('')
+  const [subCategoryId, setSubCategoryId] = useState('')
+  const [productsPerPage, setProductsPerPage] = useState(5)
+  const [page, setPage] = useState(0)
   const { addFeedback, Messages } = useFeedback()
 
   const enableCreateProduct = name !== ''
 
   const clearFilters = () => {
     setName('')
+    setCategoryId('')
+    setSubCategoryId('')
   }
+
+  const enableClearFilters =
+    name !== '' || categoryId !== '' || subCategoryId !== ''
 
   const { data: productsData, refetch: reloadProducts } =
     trpc.product.getAllProducts.useQuery(
       {
         name: name !== '' ? name : undefined,
+        categoryId: categoryId !== '' ? categoryId : undefined,
+        subCategoryId: subCategoryId !== '' ? subCategoryId : undefined,
+        skip: page * productsPerPage,
+        take: productsPerPage,
       },
       {
         enabled: sessionData?.user !== undefined,
@@ -66,6 +79,15 @@ const Produtos: NextPage = () => {
     hiddenPrice: boolean
   }) => updateProduct({ id, hiddenPrice })
 
+  const { data: categoriesData } = trpc.category.getAllCategories.useQuery(
+    {},
+    {
+      enabled: sessionData?.user !== undefined,
+      refetchInterval: -1,
+      refetchOnWindowFocus: false,
+    }
+  )
+
   const { mutate: deleteProduct } = trpc.product.deleteProduct.useMutation({
     onSuccess: (product) => {
       addFeedback(`Produto ${product.name} deletado`)
@@ -80,7 +102,7 @@ const Produtos: NextPage = () => {
     const url = sessionData?.user?.image
     if (url) {
       return (
-        <label tabIndex={0} className="btn-ghost btn-circle avatar btn">
+        <label tabIndex={0} className="btn btn-ghost btn-circle avatar">
           <div className="w-10 rounded-full">
             <Image
               src={url}
@@ -93,7 +115,7 @@ const Produtos: NextPage = () => {
     return (
       <label
         tabIndex={0}
-        className="placeholder btn-ghost btn-circle avatar btn"
+        className="placeholder btn btn-ghost btn-circle avatar"
       >
         <div className="w-24 rounded-full bg-neutral-focus text-neutral-content">
           <span className="text-3xl">K</span>
@@ -115,7 +137,7 @@ const Produtos: NextPage = () => {
       <nav className="navbar bg-base-100">
         <div className="navbar-start">
           <button
-            className="btn-ghost btn-square btn"
+            className="btn btn-ghost btn-square"
             onClick={() => setSidePanelState((old) => !old)}
           >
             <svg
@@ -149,7 +171,7 @@ const Produtos: NextPage = () => {
             >
               <li>
                 <button
-                  className="btn-primary btn"
+                  className="btn btn-primary"
                   onClick={
                     sessionData ? () => signOut() : () => signIn('google')
                   }
@@ -172,6 +194,13 @@ const Produtos: NextPage = () => {
               })
             }}
           >
+            <button
+              disabled={!enableClearFilters}
+              className="btn"
+              onClick={clearFilters}
+            >
+              Limpar Filtros
+            </button>
             <input
               type="text"
               placeholder="Nome"
@@ -179,6 +208,37 @@ const Produtos: NextPage = () => {
               value={name}
               onChange={(e) => setName(e.target.value)}
             />
+            <select
+              className="select-bordered select"
+              value={categoryId}
+              onChange={(e) => setCategoryId(e.target.value)}
+            >
+              <option value="" disabled>
+                Categorias
+              </option>
+              {categoriesData?.map((category) => (
+                <option key={category.id} value={category.id}>
+                  {category.name}
+                </option>
+              ))}
+            </select>
+            <select
+              className="select-bordered select"
+              value={subCategoryId}
+              onChange={(e) => setSubCategoryId(e.target.value)}
+            >
+              <option value="" disabled>
+                SubCategorias
+              </option>
+              {categoriesData
+                ?.filter(({ id }) => id === categoryId)
+                .pop()
+                ?.subcategories.map((subcategory) => (
+                  <option key={subcategory.id} value={subcategory.id}>
+                    {subcategory.name}
+                  </option>
+                ))}
+            </select>
             <input
               type="submit"
               disabled={!enableCreateProduct}
@@ -186,6 +246,34 @@ const Produtos: NextPage = () => {
               value="Novo Produto"
             />
           </form>
+          <div className="grid grid-cols-2 items-end gap-10">
+            <div className="form-control">
+              <label className="label">
+                <span className="label-text">Produtos por página</span>
+              </label>
+              <input
+                type="number"
+                className="input-bordered input"
+                value={productsPerPage}
+                onChange={(e) => setProductsPerPage(Number(e.target.value))}
+              />
+            </div>
+            <div className="btn-group grid grid-cols-3">
+              <button
+                className="btn-outline btn"
+                onClick={() => setPage((old) => Math.max(0, old - 1))}
+              >
+                Anterior
+              </button>
+              <button className="btn-disabled btn">Página {page + 1}</button>
+              <button
+                className="btn-outline btn"
+                onClick={() => setPage((old) => old + 1)}
+              >
+                Próxima
+              </button>
+            </div>
+          </div>
           <div className="overflow-x-auto">
             <table className="table w-1/2">
               <thead>
@@ -208,7 +296,7 @@ const Produtos: NextPage = () => {
                   <tr key={product.id}>
                     <th>
                       <button
-                        className="btn-ghost btn hover:bg-red-500 hover:text-base-100"
+                        className="btn btn-ghost hover:bg-red-500 hover:text-base-100"
                         onClick={() => deleteProduct({ id: product.id })}
                       >
                         Excluir
@@ -286,7 +374,7 @@ const Produtos: NextPage = () => {
       >
         <div className="flex h-screen w-auto items-start justify-start gap-2 bg-black/50 pt-5 pl-5 pr-20">
           <button
-            className="btn-ghost btn text-base-100"
+            className="btn btn-ghost text-base-100"
             onClick={() => setSidePanelState(false)}
           >
             Fechar
