@@ -133,7 +133,7 @@ const EditarProduto: NextPage = () => {
     const url = sessionData?.user?.image
     if (url) {
       return (
-        <label tabIndex={0} className="btn btn-ghost btn-circle avatar">
+        <label tabIndex={0} className="btn-ghost btn-circle avatar btn">
           <div className="w-10 rounded-full">
             <Image
               src={url}
@@ -146,7 +146,7 @@ const EditarProduto: NextPage = () => {
     return (
       <label
         tabIndex={0}
-        className="placeholder btn btn-ghost btn-circle avatar"
+        className="placeholder btn-ghost btn-circle avatar btn"
       >
         <div className="w-24 rounded-full bg-neutral-focus text-neutral-content">
           <span className="text-3xl">K</span>
@@ -165,7 +165,7 @@ const EditarProduto: NextPage = () => {
       <nav className="navbar bg-base-100">
         <div className="navbar-start">
           <button
-            className="btn btn-ghost btn-square"
+            className="btn-ghost btn-square btn"
             onClick={() => setSidePanelState((old) => !old)}
           >
             <svg
@@ -199,7 +199,7 @@ const EditarProduto: NextPage = () => {
             >
               <li>
                 <button
-                  className="btn btn-primary"
+                  className="btn-primary btn"
                   onClick={
                     sessionData ? () => signOut() : () => signIn('google')
                   }
@@ -257,7 +257,7 @@ const EditarProduto: NextPage = () => {
                 <div key={url} className="indicator">
                   <div className="indicator-item">
                     <button
-                      className="btn btn-ghost btn-square bg-red-500 text-base-100"
+                      className="btn-ghost btn-square btn bg-red-500 text-base-100"
                       onClick={() => {
                         deleteFile({ file, url })
                         if (photoId === undefined) return
@@ -442,7 +442,7 @@ const EditarProduto: NextPage = () => {
       >
         <div className="flex h-screen w-auto items-start justify-start gap-2 bg-black/50 pt-5 pl-5 pr-20">
           <button
-            className="btn btn-ghost text-base-100"
+            className="btn-ghost btn text-base-100"
             onClick={() => setSidePanelState(false)}
           >
             Fechar

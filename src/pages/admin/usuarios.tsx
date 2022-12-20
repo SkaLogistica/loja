@@ -83,7 +83,7 @@ const Admin: NextPage = () => {
     const url = sessionData?.user?.image
     if (url) {
       return (
-        <label tabIndex={0} className="btn-ghost btn-circle avatar btn">
+        <label tabIndex={0} className="btn btn-ghost btn-circle avatar">
           <div className="w-10 rounded-full">
             <Image
               src={url}
@@ -96,7 +96,7 @@ const Admin: NextPage = () => {
     return (
       <label
         tabIndex={0}
-        className="placeholder btn-ghost btn-circle avatar btn"
+        className="placeholder btn btn-ghost btn-circle avatar"
       >
         <div className="w-24 rounded-full bg-neutral-focus text-neutral-content">
           <span className="text-3xl">K</span>
@@ -118,7 +118,7 @@ const Admin: NextPage = () => {
       <nav className="navbar bg-base-100">
         <div className="navbar-start">
           <button
-            className="btn-ghost btn-square btn"
+            className="btn btn-ghost btn-square"
             onClick={() => setSidePanelState((old) => !old)}
           >
             <svg
@@ -152,7 +152,7 @@ const Admin: NextPage = () => {
             >
               <li>
                 <button
-                  className="btn-primary btn"
+                  className="btn btn-primary"
                   onClick={
                     sessionData ? () => signOut() : () => signIn('google')
                   }
@@ -225,7 +225,7 @@ const Admin: NextPage = () => {
                   <tr key={user.id}>
                     <th>
                       <button
-                        className="btn-ghost btn hover:bg-red-500 hover:text-base-100"
+                        className="btn btn-ghost hover:bg-red-500 hover:text-base-100"
                         onClick={() => deleteUser({ id: user.id })}
                       >
                         Excluir
@@ -300,7 +300,7 @@ const Admin: NextPage = () => {
       >
         <div className="flex h-screen w-auto items-start justify-start gap-2 bg-black/50 pt-5 pl-5 pr-20">
           <button
-            className="btn-ghost btn text-base-100"
+            className="btn btn-ghost text-base-100"
             onClick={() => setSidePanelState(false)}
           >
             Fechar
