@@ -13,6 +13,7 @@
     "plugin:prettier/recommended"
   ],
   "rules": {
+    "prettier/prettier": "off",
     "antfu/if-newline": "off",
     "@typescript-eslint/consistent-type-imports": "warn",
     "tailwindcss/classnames-order": "off",
