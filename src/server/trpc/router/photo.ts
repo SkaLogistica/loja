@@ -23,7 +23,7 @@ export const photoRouter = router({
       }
 
       const command = new DeleteObjectCommand({
-        Bucket: env.AWS_BUCKET_NAME,
+        Bucket: env.S3_BUCKET_NAME,
         Key: photo.name,
       })
 

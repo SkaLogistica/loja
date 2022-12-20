@@ -19,7 +19,7 @@ export const awsRouter = router({
     )
     .query(({ ctx, input }) => {
       const command = new PutObjectCommand({
-        Bucket: env.AWS_BUCKET_NAME,
+        Bucket: env.S3_BUCKET_NAME,
         Key: input.name,
       })
 
@@ -35,7 +35,7 @@ export const awsRouter = router({
     )
     .query(({ ctx, input }) => {
       const command = new DeleteObjectCommand({
-        Bucket: env.AWS_BUCKET_NAME,
+        Bucket: env.S3_BUCKET_NAME,
         Key: input.name,
       })
 
