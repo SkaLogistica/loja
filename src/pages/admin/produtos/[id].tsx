@@ -1,6 +1,5 @@
 import type { Dispatch, SetStateAction } from 'react'
 import { useState } from 'react'
-import { utilsBr } from 'js-brasil'
 import { type NextPage } from 'next'
 import Head from 'next/head'
 import Image from 'next/image'
@@ -16,6 +15,31 @@ import {
   useFeedback,
   withAuth,
 } from '@root/utils'
+
+/*
+ * NOTE: CODE VENDORIZED FROM 'js-brasil' library cause of build issues
+ */
+export function currencyToNumber(input: string) {
+  input = input.replace(/ /g, '')
+  if (input.includes('$')) {
+    const vals = input.split('$')
+    input = vals[1]!
+  }
+
+  // Keeping just numbers . and ,
+  input = input.replace(/[^0-9.,]+/, '')
+
+  // eua format
+  if (input.indexOf('.') === input.length - 1 - 2) {
+    input = input.replace(/\,/g, '')
+  }
+  // br format
+  else {
+    input = input.replace(/\./g, '').replace(',', '.')
+  }
+
+  return parseFloat(input)
+}
 
 const EditarProduto: NextPage = () => {
   const { data: sessionData } = useSession()
@@ -109,7 +133,7 @@ const EditarProduto: NextPage = () => {
     const url = sessionData?.user?.image
     if (url) {
       return (
-        <label tabIndex={0} className="btn-ghost btn-circle avatar btn">
+        <label tabIndex={0} className="btn btn-ghost btn-circle avatar">
           <div className="w-10 rounded-full">
             <Image
               src={url}
@@ -122,7 +146,7 @@ const EditarProduto: NextPage = () => {
     return (
       <label
         tabIndex={0}
-        className="placeholder btn-ghost btn-circle avatar btn"
+        className="placeholder btn btn-ghost btn-circle avatar"
       >
         <div className="w-24 rounded-full bg-neutral-focus text-neutral-content">
           <span className="text-3xl">K</span>
@@ -141,7 +165,7 @@ const EditarProduto: NextPage = () => {
       <nav className="navbar bg-base-100">
         <div className="navbar-start">
           <button
-            className="btn-ghost btn-square btn"
+            className="btn btn-ghost btn-square"
             onClick={() => setSidePanelState((old) => !old)}
           >
             <svg
@@ -175,7 +199,7 @@ const EditarProduto: NextPage = () => {
             >
               <li>
                 <button
-                  className="btn-primary btn"
+                  className="btn btn-primary"
                   onClick={
                     sessionData ? () => signOut() : () => signIn('google')
                   }
@@ -214,7 +238,7 @@ const EditarProduto: NextPage = () => {
               updateProduct({
                 id,
                 name,
-                price: `${utilsBr.currencyToNumber(price)}` || undefined,
+                price: `${currencyToNumber(price)}` || undefined,
                 description: description || undefined,
                 categoryId: categoryId || undefined,
                 subcategoryId: subCategoryId || undefined,
@@ -233,7 +257,7 @@ const EditarProduto: NextPage = () => {
                 <div key={url} className="indicator">
                   <div className="indicator-item">
                     <button
-                      className="btn-ghost btn-square btn bg-red-500 text-base-100"
+                      className="btn btn-ghost btn-square bg-red-500 text-base-100"
                       onClick={() => {
                         deleteFile({ file, url })
                         if (photoId === undefined) return
@@ -418,7 +442,7 @@ const EditarProduto: NextPage = () => {
       >
         <div className="flex h-screen w-auto items-start justify-start gap-2 bg-black/50 pt-5 pl-5 pr-20">
           <button
-            className="btn-ghost btn text-base-100"
+            className="btn btn-ghost text-base-100"
             onClick={() => setSidePanelState(false)}
           >
             Fechar
