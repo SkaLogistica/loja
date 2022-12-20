@@ -52,11 +52,30 @@ model Product {
 }
 
 model Photo {
-  id        String   @id @default(cuid())
-  url       String
-  name      String
-  product   Product? @relation(fields: [productId], references: [id])
-  productId String?
+  id          String   @id @default(cuid())
+  url         String
+  name        String
+  product     Product? @relation(fields: [productId], references: [id])
+  productId   String?
+  company     Company? @relation(fields: [companyName], references: [name])
+  companyName String?
+}
+
+model Company {
+  name              String  @id @unique
+  cnpj              String
+  stateSubscription String
+  contactPhone      String
+  contactEmail      String
+  workingHours      String
+  address           Address @relation(fields: [addressCep], references: [cep])
+  addressCep        String
+  photos            Photo[]
+}
+
+model Address {
+  cep       String    @id
+  companies Company[]
 }
 
 // Necessary for Next auth
