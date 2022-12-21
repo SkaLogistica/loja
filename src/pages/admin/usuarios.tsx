@@ -176,7 +176,7 @@ const Admin: NextPage = () => {
             </button>
             <button
               className={`btn ${
-                deletedFilter ? 'btn-primary' : 'btn-secondary'
+                deletedFilter ? 'btn-secondary' : 'btn-neutral'
               }`}
               onClick={() => setDeletedFilter((old) => !old)}
             >
