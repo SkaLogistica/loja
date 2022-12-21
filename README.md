@@ -1,4 +1,4 @@
-# Loja da SKA Logística
+# Loja da SKA Distribuição
 
 ## Como iniciar?
 

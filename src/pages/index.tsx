@@ -30,7 +30,7 @@ const Home: NextPage = () => {
   return (
     <>
       <Head>
-        <title>Loja SKA Logística</title>
+        <title>Loja SKA Distribuição</title>
         <meta name="description" content="Loja de material de construções" />
         <link rel="icon" href="/favicon.ico" />
       </Head>
