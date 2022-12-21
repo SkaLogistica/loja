@@ -350,7 +350,7 @@ const Empresa: NextPage = () => {
         </div>
       </main>
       <aside
-        className={`fixed top-0 overflow-auto bg-white transition-all duration-300 ease-in-out ${
+        className={`fixed z-20 top-0 overflow-auto bg-white transition-all duration-300 ease-in-out ${
           isSidePanelOpen ? 'translate-x-0' : '-translate-x-full'
         }`}
       >
