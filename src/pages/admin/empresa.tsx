@@ -6,7 +6,7 @@ import Link from 'next/link'
 import { signIn, signOut, useSession } from 'next-auth/react'
 
 import { env } from '@root/env/client.mjs'
-import { trpc, useAWS, useFeedback /* withAuth */ } from '@root/utils'
+import { getAvatarImg, trpc, useAWS, useFeedback /* withAuth */ } from '@root/utils'
 
 const Empresa: NextPage = () => {
   const { data: sessionData } = useSession()
@@ -100,32 +100,6 @@ const Empresa: NextPage = () => {
 
   const [isSidePanelOpen, setSidePanelState] = useState(false)
 
-  const getAvatarImg = () => {
-    const url = sessionData?.user?.image
-    if (url) {
-      return (
-        <label tabIndex={0} className="btn-ghost btn-circle avatar btn">
-          <div className="w-10 rounded-full">
-            <Image
-              src={url}
-              alt={`Imagem de perfil do usuário ${sessionData.user?.name}`}
-            />
-          </div>
-        </label>
-      )
-    }
-    return (
-      <label
-        tabIndex={0}
-        className="placeholder btn-ghost btn-circle avatar btn"
-      >
-        <div className="w-24 rounded-full bg-neutral-focus text-neutral-content">
-          <span className="text-3xl">K</span>
-        </div>
-      </label>
-    )
-  }
-
   return (
     <>
       <Head>
@@ -161,7 +135,7 @@ const Empresa: NextPage = () => {
         <div className="navbar-end">
           <div className="dropdown-end dropdown">
             <div className="flex flex-col items-center pr-11">
-              {getAvatarImg()}
+              {getAvatarImg(sessionData?.user)}
               <span>{sessionData?.user?.name}</span>
             </div>
             <ul

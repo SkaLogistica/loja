@@ -6,7 +6,7 @@ import Link from 'next/link'
 import { signIn, signOut, useSession } from 'next-auth/react'
 
 import { Message } from '@root/components'
-import { trpc, withAuth } from '@root/utils'
+import { getAvatarImg, trpc, withAuth } from '@root/utils'
 
 function formatFeedback(feedback: string, id: number) {
   if (!feedback) return <></>
@@ -112,32 +112,6 @@ const Category: NextPage = () => {
     onError: (error) => addFeedback(`ERRO: ${error.message}`),
   })
 
-  const getAvatarImg = () => {
-    const url = sessionData?.user?.image
-    if (url) {
-      return (
-        <label tabIndex={0} className="btn-ghost btn-circle avatar btn">
-          <div className="w-10 rounded-full">
-            <Image
-              src={url}
-              alt={`Imagem de perfil do usuário ${sessionData.user?.name}`}
-            />
-          </div>
-        </label>
-      )
-    }
-    return (
-      <label
-        tabIndex={0}
-        className="placeholder btn-ghost btn-circle avatar btn"
-      >
-        <div className="w-24 rounded-full bg-neutral-focus text-neutral-content">
-          <span className="text-3xl">K</span>
-        </div>
-      </label>
-    )
-  }
-
   function formatSubCategories(category: {
     id: string
     subcategories: { name: string }[]
@@ -201,7 +175,7 @@ const Category: NextPage = () => {
         <div className="navbar-end">
           <div className="dropdown-end dropdown">
             <div className="flex flex-col items-center pr-11">
-              {getAvatarImg()}
+              {getAvatarImg(sessionData?.user)}
               <span>{sessionData?.user?.name}</span>
             </div>
             <ul

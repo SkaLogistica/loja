@@ -1,11 +1,10 @@
 import { useState } from 'react'
 import { type NextPage } from 'next'
 import Head from 'next/head'
-import Image from 'next/image'
 import Link from 'next/link'
 import { signIn, signOut, useSession } from 'next-auth/react'
 
-import { currencyFormatter, trpc, useFeedback, withAuth } from '@root/utils'
+import { currencyFormatter, getAvatarImg, trpc, useFeedback, withAuth } from '@root/utils'
 
 const Produtos: NextPage = () => {
   const { data: sessionData } = useSession()
@@ -98,32 +97,6 @@ const Produtos: NextPage = () => {
 
   const [isSidePanelOpen, setSidePanelState] = useState(false)
 
-  const getAvatarImg = () => {
-    const url = sessionData?.user?.image
-    if (url) {
-      return (
-        <label tabIndex={0} className="btn btn-ghost btn-circle avatar">
-          <div className="w-10 rounded-full">
-            <Image
-              src={url}
-              alt={`Imagem de perfil do usuário ${sessionData.user?.name}`}
-            />
-          </div>
-        </label>
-      )
-    }
-    return (
-      <label
-        tabIndex={0}
-        className="placeholder btn btn-ghost btn-circle avatar"
-      >
-        <div className="w-24 rounded-full bg-neutral-focus text-neutral-content">
-          <span className="text-3xl">K</span>
-        </div>
-      </label>
-    )
-  }
-
   return (
     <>
       <Head>
@@ -162,7 +135,7 @@ const Produtos: NextPage = () => {
         <div className="navbar-end">
           <div className="dropdown-end dropdown">
             <div className="flex flex-col items-center pr-11">
-              {getAvatarImg()}
+              {getAvatarImg(sessionData?.user)}
               <span>{sessionData?.user?.name}</span>
             </div>
             <ul
