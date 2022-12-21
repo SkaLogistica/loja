@@ -238,7 +238,7 @@ const EditarProduto: NextPage = () => {
               updateProduct({
                 id,
                 name,
-                price: `${currencyToNumber(price)}` || undefined,
+                price: price ? `${currencyToNumber(price)}` : undefined,
                 description: description || undefined,
                 categoryId: categoryId || undefined,
                 subcategoryId: subCategoryId || undefined,
