@@ -2,7 +2,6 @@ import type { Dispatch, SetStateAction } from 'react'
 import { useState } from 'react'
 import { type NextPage } from 'next'
 import Head from 'next/head'
-import Image from 'next/image'
 import Link from 'next/link'
 import { useRouter } from 'next/router'
 import { signIn, signOut, useSession } from 'next-auth/react'
@@ -257,13 +256,16 @@ const EditarProduto: NextPage = () => {
                       </svg>
                     </button>
                   </div>
-                  <Image
-                    src={url}
-                    alt="Imagem selecionada para categoria"
-                    width={112}
-                    height={112}
-                    className="max-h-md h-auto w-auto max-w-md rounded"
-                  />
+                  <button className="btn-ghost btn lowercase">
+                    <a
+                      href={url ?? '#'}
+                      className="link"
+                      target="_blank"
+                      rel="noreferrer"
+                    >
+                      {isLocalUrl(url) ? file?.name : url.split('/').pop()}
+                    </a>
+                  </button>
                 </div>
               ))}
             </div>
