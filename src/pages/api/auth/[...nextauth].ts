@@ -34,7 +34,7 @@ export const authOptions: NextAuthOptions = {
         },
       })
 
-      const isAllowedToSignIn = !userData || userData.deletedAt !== null && userData.active === true
+      const isAllowedToSignIn = !userData || userData.deletedAt === null && userData.active === true
 
       if (isAllowedToSignIn) {
         return true
