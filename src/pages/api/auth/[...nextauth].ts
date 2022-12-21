@@ -28,19 +28,13 @@ export const authOptions: NextAuthOptions = {
     async signIn({ user }) {
       if (user.email === env.ADMIN_EMAIL) return true
 
-      const userData = await prisma.user.findFirst({
+      const userData = await prisma.user.findUnique({
         where: {
-          id: user.id,
-          deletedAt: {
-            equals: null,
-          },
-          active: {
-            equals: true,
-          },
+          id: user.id
         },
       })
 
-      const isAllowedToSignIn = !!userData
+      const isAllowedToSignIn = !userData || userData.deletedAt !== null && userData.active === true
 
       if (isAllowedToSignIn) {
         return true
