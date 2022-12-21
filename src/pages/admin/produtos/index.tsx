@@ -263,11 +263,12 @@ const Produtos: NextPage = () => {
             <div className="btn-group grid grid-cols-3">
               <button
                 className="btn-outline btn"
+                disabled={!page}
                 onClick={() => setPage((old) => Math.max(0, old - 1))}
               >
                 Anterior
               </button>
-              <button className="btn-disabled btn">Página {page + 1}</button>
+              <button className="border border-black font-bold uppercase text-black bg-neutral">Página {page + 1}</button>
               <button
                 className="btn-outline btn"
                 onClick={() => setPage((old) => old + 1)}
