@@ -89,7 +89,7 @@ export const productRouter = router({
           )
           .optional(),
         categoryId: z.string().cuid().optional(),
-        subcategoryId: z.string().cuid().optional(),
+        subCategoryId: z.string().cuid().optional(),
         photosFilenames: z.string().array().optional(),
       })
     )
@@ -107,9 +107,9 @@ export const productRouter = router({
                 connect: { id: input.categoryId },
               }
             : undefined,
-          subCategory: input.subcategoryId
+          subCategory: input.subCategoryId
             ? {
-                connect: { id: input.subcategoryId },
+                connect: { id: input.subCategoryId },
               }
             : undefined,
           photos: input.photosFilenames

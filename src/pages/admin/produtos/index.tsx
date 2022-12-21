@@ -191,6 +191,8 @@ const Produtos: NextPage = () => {
               e.preventDefault()
               createProduct({
                 name,
+                categoryId,
+                subCategoryId,
               })
             }}
           >
