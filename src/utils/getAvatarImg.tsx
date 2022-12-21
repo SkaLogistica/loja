@@ -8,6 +8,8 @@ export const getAvatarImg = (user?: {image?: string | null, name?: string | null
       <div className="w-10 rounded-full">
         <Image
           src={user?.image ?? favicon}
+          width={32}
+          height={32}
           alt={`Imagem de perfil do usuário ${user?.name}`}
         />
       </div>
