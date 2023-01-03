@@ -159,7 +159,12 @@ const EditarProduto: NextPage = () => {
           </button>
         </div>
         <div className="navbar-center">
-          <a className="text-xl font-bold normal-case">Produto</a>
+          <div className="text-xl font-bold normal-case breadcrumbs">
+            <ul>
+              <li><Link href={'/admin/produtos'}>Produtos</Link></li> 
+              <li>{name}</li> 
+            </ul>
+          </div>
         </div>
         <div className="navbar-end">
           <div className="dropdown-end dropdown">
