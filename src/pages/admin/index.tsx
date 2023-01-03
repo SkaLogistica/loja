@@ -1,22 +1,19 @@
 import { type NextPage } from 'next'
 import Head from 'next/head'
 import Image from 'next/image'
-import Link from 'next/link'
+import { useRouter } from 'next/router'
 import { signIn, signOut, useSession } from 'next-auth/react'
 
 const AuthButton: React.FC = () => {
+  const router = useRouter()
   const { data: sessionData } = useSession()
+
+  if (sessionData?.user !== undefined) {
+    router.push("/admin/usuarios");
+  }
 
   return (
     <div className="flex flex-col items-center justify-center gap-4">
-      {sessionData && (
-        <Link
-          className="flex max-w-xs flex-col gap-4 rounded-xl bg-white/10 p-4 text-white hover:bg-white/20"
-          href="/admin/usuarios"
-        >
-          <h3 className="text-2xl font-bold">ADMIN</h3>
-        </Link>
-      )}
       <button
         className="btn-primary btn gap-2"
         onClick={sessionData ? () => signOut() : () => signIn('google')}

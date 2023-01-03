@@ -24,7 +24,7 @@ export const withAuth = (WrappedComponent: NextPage, options?: Params) => {
         allowedRoles &&
         !allowedRoles.includes(sessionData?.user?.role ?? "User"))
     ) {
-      Router.replace(replaceUrl ?? "/");
+      Router.replace(replaceUrl ?? "/admin");
     }
 
     return <WrappedComponent />;
