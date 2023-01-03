@@ -97,6 +97,8 @@ const Produtos: NextPage = () => {
 
   const [isSidePanelOpen, setSidePanelState] = useState(false)
 
+  const disableNextPage = productsData ? (productsData.length < productsPerPage) : false;
+  
   return (
     <>
       <Head>
@@ -164,8 +166,8 @@ const Produtos: NextPage = () => {
               e.preventDefault()
               createProduct({
                 name,
-                categoryId,
-                subCategoryId,
+                categoryId: categoryId || undefined,
+                subCategoryId: subCategoryId || undefined,
               })
             }}
           >
@@ -228,6 +230,7 @@ const Produtos: NextPage = () => {
               </label>
               <input
                 type="number"
+                min={1}
                 className="input-bordered input"
                 value={productsPerPage}
                 onChange={(e) => setProductsPerPage(Number(e.target.value))}
@@ -244,6 +247,7 @@ const Produtos: NextPage = () => {
               <button className="border border-black font-bold uppercase text-black bg-neutral">Página {page + 1}</button>
               <button
                 className="btn-outline btn"
+                disabled={disableNextPage}
                 onClick={() => setPage((old) => old + 1)}
               >
                 Próxima
