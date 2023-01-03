@@ -4,14 +4,14 @@ import { z } from 'zod'
 
 import { formatAWSfileUrl } from '@root/server/common'
 
-import { createRbacProcedure, router } from '../trpc'
+import { createRbacProcedure, publicProcedure, router } from '../trpc'
 
 export const productProcedure = createRbacProcedure({
   requiredRoles: ['Admin', 'Editor'],
 })
 
 export const productRouter = router({
-  getAllProducts: productProcedure
+  getAllProducts: publicProcedure
     .input(
       z.object({
         name: z.string().optional(),
@@ -46,6 +46,7 @@ export const productRouter = router({
         include: {
           category: true,
           subCategory: true,
+          photos: true,
         },
         take: input.take,
         skip: input.skip,
