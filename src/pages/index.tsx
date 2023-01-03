@@ -1,5 +1,6 @@
 import { type NextPage } from 'next'
 import Head from 'next/head'
+import Image from 'next/image'
 import Link from 'next/link'
 import { signIn, signOut, useSession } from 'next-auth/react'
 
@@ -17,10 +18,22 @@ const AuthButton: React.FC = () => {
         </Link>
       )}
       <button
-        className="rounded-full bg-white/10 px-10 py-3 font-semibold text-white no-underline transition hover:bg-white/20"
+        className="btn-primary btn gap-2"
         onClick={sessionData ? () => signOut() : () => signIn('google')}
       >
-        {sessionData ? 'SAIR' : 'ENTRAR'}
+        {sessionData ? (
+          'SAIR'
+        ) : (
+          <>
+            <Image
+              src={'/google-logo.png'}
+              width={30}
+              height={30}
+              alt={'Logo do Google'}
+            />
+            <span>ENTRAR COM GOOGLE</span>
+          </>
+        )}
       </button>
     </div>
   )
@@ -34,8 +47,14 @@ const Home: NextPage = () => {
         <meta name="description" content="Loja de material de construções" />
         <link rel="icon" href="/favicon.ico" />
       </Head>
-      <main className="flex min-h-screen bg-gradient-to-b from-[#2e026d] to-[#15162c]">
+      <main className="flex min-h-screen bg-black/50">
         <div className="container flex flex-col items-center justify-center gap-2">
+          <Image
+            src={'/logo.png'}
+            width={202}
+            height={202}
+            alt={'Logo da SKA Distribuição'}
+          />
           <AuthButton />
         </div>
       </main>
