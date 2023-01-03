@@ -434,4 +434,4 @@ const Category: NextPage = () => {
   )
 }
 
-export default withAuth(Category, ['Admin', 'Editor'])
+export default withAuth(Category, { allowedRoles: ['Admin', 'Editor'] })

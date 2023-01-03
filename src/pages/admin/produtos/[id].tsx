@@ -465,4 +465,4 @@ const EditarProduto: NextPage = () => {
   )
 }
 
-export default withAuth(EditarProduto, ['Admin', 'Editor'])
+export default withAuth(EditarProduto, { allowedRoles: ['Admin', 'Editor']})

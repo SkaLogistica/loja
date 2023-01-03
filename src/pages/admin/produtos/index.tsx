@@ -396,4 +396,4 @@ const Produtos: NextPage = () => {
   )
 }
 
-export default withAuth(Produtos, ['Admin', 'Editor'])
+export default withAuth(Produtos, { allowedRoles: ['Admin', 'Editor']})

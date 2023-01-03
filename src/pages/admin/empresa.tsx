@@ -5,7 +5,7 @@ import Link from 'next/link'
 import { signIn, signOut, useSession } from 'next-auth/react'
 
 import { env } from '@root/env/client.mjs'
-import { getAvatarImg, trpc, useAWS, useFeedback /* withAuth */ } from '@root/utils'
+import { getAvatarImg, trpc, useAWS, useFeedback, withAuth } from '@root/utils'
 
 const Empresa: NextPage = () => {
   const { data: sessionData } = useSession()
@@ -402,4 +402,4 @@ const Empresa: NextPage = () => {
   )
 }
 
-export default Empresa // withAuth(Empresa, ['Admin'])
+export default withAuth(Empresa, { allowedRoles: ['Admin']})

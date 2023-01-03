@@ -322,4 +322,4 @@ const Admin: NextPage = () => {
   )
 }
 
-export default withAuth(Admin, ['Admin', 'Moderator'])
+export default withAuth(Admin, { allowedRoles: ['Admin', 'Moderator']})
