@@ -1,42 +1,132 @@
+import { useState } from 'react'
 import { type NextPage } from 'next'
-import Head from 'next/head'
 import Image from 'next/image'
-import Link from 'next/link'
 import { useRouter } from 'next/router'
 import { useSession } from 'next-auth/react'
 
+import { StoreLayout } from '@root/layouts'
+import { currencyFormatter, trpc } from '@root/utils'
+
 const Home: NextPage = () => {
-  const router = useRouter();
-  const {data: session} = useSession();
+  const router = useRouter()
+  const { data: session } = useSession()
+  const [name, setName] = useState('')
+  const [page, setPage] = useState(0)
+  const productsPerPage = 12
+
+  const { data: productsData, refetch } = trpc.product.getAllProducts.useQuery(
+    {
+      name: name !== '' ? name : undefined,
+      skip: page * productsPerPage,
+      take: productsPerPage,
+    },
+    {
+      staleTime: Infinity,
+    }
+  )
+
+  const disableNextPage = productsData
+    ? productsData.length < productsPerPage
+    : false
 
   if (session?.user !== undefined) {
-    router.push("/admin/usuarios");
+    router.push('/admin/usuarios')
   }
 
   return (
-    <>
-      <Head>
-        <title>Loja SKA Distribuição</title>
-        <meta name="description" content="Loja de material de construções" />
-        <link rel="icon" href="/favicon.ico" />
-      </Head>
-      <main className="flex min-h-screen bg-black/50">
-        <div className="container flex flex-col items-center justify-center gap-2">
-          <Image
-            src={'/logo.png'}
-            width={202}
-            height={202}
-            alt={'Logo da SKA Distribuição'}
-          />
-          <Link
-            className="flex max-w-xs flex-col gap-4 rounded-xl bg-white/10 p-4 text-white hover:bg-white/20"
-            href="/admin"
+    <StoreLayout
+      searchSubmit={(e) => {
+        e.preventDefault()
+        refetch()
+      }}
+      searchOnChange={(e) => {
+        setName(e.target.value)
+      }}
+    >
+      <main className="flex w-full flex-1 flex-col items-center justify-center gap-4">
+        <div className="grid grid-cols-1 gap-2 lg:grid-cols-2">
+          {productsData?.map((product) => (
+            <div
+              key={product.id}
+              className="card border bg-base-100 shadow-xl lg:card-side"
+            >
+              {product.photos.length > 0 ? (
+                <figure>
+                  <Image
+                    width={400}
+                    height={400}
+                    src={product.photos[0]?.url ?? ''}
+                    alt={`Imagem do ${product.name}`}
+                  />
+                </figure>
+              ) : (
+                <></>
+              )}
+              <div className="card-body">
+                <h2 className="card-title">{product.name}</h2>
+                <p>{currencyFormatter(Number(product.price))}</p>
+                <div className="card-actions justify-end">
+                  <button className="btn btn-primary">Comprar</button>
+                </div>
+              </div>
+            </div>
+          ))}
+        </div>
+        <div className="btn-group grid grid-cols-3">
+          <button
+            className="btn btn-ghost"
+            disabled={!page}
+            onClick={() => setPage((old) => Math.max(0, old - 1))}
           >
-            <h3 className="text-2xl font-bold">ADMIN</h3>
-          </Link>
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              width="192"
+              height="192"
+              fill="#000000"
+              viewBox="0 0 256 256"
+              className="h-4 w-4"
+            >
+              <rect width="256" height="256" fill="none"></rect>
+              <polyline
+                points="160 208 80 128 160 48"
+                fill="none"
+                stroke="#000000"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="16"
+              ></polyline>
+            </svg>
+          </button>
+          <div className="flex cursor-not-allowed items-center justify-center bg-primary/30">
+            {page + 1}
+          </div>
+          <button
+            className="btn btn-ghost"
+            disabled={disableNextPage}
+            onClick={() => setPage((old) => old + 1)}
+          >
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              width="192"
+              height="192"
+              fill="#000000"
+              viewBox="0 0 256 256"
+              className="h-4 w-4"
+            >
+              <rect width="256" height="256" fill="none"></rect>
+              <polyline
+                points="96 48 176 128 96 208"
+                fill="none"
+                stroke="#000000"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="16"
+              ></polyline>
+            </svg>
+          </button>
         </div>
       </main>
-    </>
+    </StoreLayout>
   )
 }
 
