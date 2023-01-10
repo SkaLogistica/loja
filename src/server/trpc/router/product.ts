@@ -17,6 +17,8 @@ export const productRouter = router({
         name: z.string().optional(),
         categoryId: z.string().cuid().optional(),
         subCategoryId: z.string().cuid().optional(),
+        category: z.string().optional(),
+        subCategory: z.string().optional(),
         take: z.number().gte(0).optional(),
         skip: z.number().gte(0).optional(),
       })
@@ -24,7 +26,11 @@ export const productRouter = router({
     .query(({ ctx, input }) => {
       return ctx.prisma.product.findMany({
         where:
-          input.name || input.categoryId || input.subCategoryId
+          input.name ||
+          input.categoryId ||
+          input.subCategoryId ||
+          input.category ||
+          input.subCategory
             ? {
                 name: input.name
                   ? {
@@ -39,6 +45,20 @@ export const productRouter = router({
                 subCategoryId: input.subCategoryId
                   ? {
                       equals: input.subCategoryId,
+                    }
+                  : undefined,
+                category: input.category
+                  ? {
+                      name: {
+                        equals: input.category,
+                      },
+                    }
+                  : undefined,
+                subCategory: input.subCategory
+                  ? {
+                      name: {
+                        equals: input.subCategory,
+                      },
                     }
                   : undefined,
               }
