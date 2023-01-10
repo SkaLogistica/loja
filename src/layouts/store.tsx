@@ -1,5 +1,6 @@
 import type { ChangeEvent, FormEvent } from 'react'
 import { useState } from 'react'
+import Link from 'next/link'
 
 import { Head, Header } from '@root/components'
 import { trpc } from '@root/utils'
@@ -25,7 +26,7 @@ export const StoreLayout: React.FC<Props> = ({
   const categoriesItems = categories?.map((category) => (
     <li tabIndex={0} key={category.id}>
       <span className="font-bold uppercase text-orange-500 [&_svg]:hover:rotate-180">
-        {category.name}
+        <Link href={`/${category.name}`}>{category.name}</Link>
         <svg
           xmlns="http://www.w3.org/2000/svg"
           width="192"
@@ -48,7 +49,11 @@ export const StoreLayout: React.FC<Props> = ({
       <ul className="rounded-box bg-base-100 p-2 shadow-lg lg:z-20">
         {category.subcategories.map((subcategory) => (
           <li key={subcategory.id}>
-            <span className="capitalize">{subcategory.name}</span>
+            <span className="capitalize">
+              <Link href={`/${category.name}/${subcategory.name}`}>
+                {subcategory.name}
+              </Link>
+            </span>
           </li>
         ))}
       </ul>
@@ -89,7 +94,7 @@ export const StoreLayout: React.FC<Props> = ({
       >
         <label
           htmlFor="menu-drawer"
-          className={`swap-rotate swap btn-circle btn lg:hidden ${
+          className={`swap-rotate swap btn btn-circle lg:hidden ${
             drawerOpen ? 'swap-active' : ''
           }`}
         >

@@ -1,11 +1,17 @@
 import { useState } from 'react'
 import { type NextPage } from 'next'
 import Image from 'next/image'
+import Link from 'next/link'
+import { useRouter } from 'next/router'
 
 import { StoreLayout } from '@root/layouts'
-import { currencyFormatter, trpc } from '@root/utils'
+import { currencyFormatter, stringifyQueryParam, trpc } from '@root/utils'
 
-const Home: NextPage = () => {
+const CategoryPage: NextPage = () => {
+  const router = useRouter()
+  const category = stringifyQueryParam(router.query.category)
+
+  const [categoryBannerUrl, setBannerUrl] = useState('')
   const [name, setName] = useState('')
   const [page, setPage] = useState(0)
   const productsPerPage = 12
@@ -13,10 +19,16 @@ const Home: NextPage = () => {
   const { data: productsData, refetch } = trpc.product.getAllProducts.useQuery(
     {
       name: name !== '' ? name : undefined,
+      category,
       skip: page * productsPerPage,
       take: productsPerPage,
     },
     {
+      onSuccess: (products) => {
+        if (products.length > 0) {
+          setBannerUrl(products[0]?.category?.bannerUrl ?? '')
+        }
+      },
       staleTime: Infinity,
     }
   )
@@ -36,6 +48,22 @@ const Home: NextPage = () => {
       }}
     >
       <main className="flex w-full flex-1 flex-col items-center justify-center gap-4">
+        <div className="breadcrumbs text-sm">
+          <ul>
+            <li>
+              <Link href="/">Página Inicial</Link>
+            </li>
+            <li>
+              <a>{category}</a>
+            </li>
+          </ul>
+        </div>
+        <Image
+          width={400}
+          height={400}
+          src={categoryBannerUrl}
+          alt={`Banner da categoria ${category}`}
+        />
         <div className="grid grid-cols-1 gap-2 lg:grid-cols-2">
           {productsData?.map((product) => (
             <div
@@ -122,4 +150,4 @@ const Home: NextPage = () => {
   )
 }
 
-export default Home
+export default CategoryPage
