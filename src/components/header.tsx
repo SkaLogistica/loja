@@ -36,10 +36,10 @@ export const Header: React.FC<Props> = ({
             <input
               type="text"
               placeholder="Search…"
-              className="input-bordered input w-96"
+              className="input-bordered input md:w-96"
               onChange={searchOnChange}
             />
-            <label htmlFor="search" className="btn-square btn rounded-r">
+            <label htmlFor="search" className="btn btn-square rounded-r">
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 className="h-6 w-6"
