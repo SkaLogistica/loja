@@ -54,7 +54,7 @@ const CategoryPage: NextPage = () => {
               <Link href="/">Página Inicial</Link>
             </li>
             <li>
-              <a>{category}</a>
+              <Link href={`/${category}`}>{category}</Link>
             </li>
           </ul>
         </div>

@@ -56,10 +56,10 @@ const SubCategoryPage: NextPage = () => {
               <Link href="/">Página Inicial</Link>
             </li>
             <li>
-              <a>{category}</a>
+              <Link href={`/${category}`}>{category}</Link>
             </li>
             <li>
-              <a>{subCategory}</a>
+              <Link href={`/${category}/${subCategory}`}>{subCategory}</Link>
             </li>
           </ul>
         </div>
