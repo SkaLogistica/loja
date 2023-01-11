@@ -71,12 +71,17 @@ export const StoreLayout: React.FC<Props> = ({
         />
         <div className="drawer-content flex flex-col">
           <Head />
-          <Header searchSubmit={searchSubmit} searchOnChange={searchOnChange} />
-          <div className="w-full lg:bg-primary/20">
-            <div className="hidden flex-none lg:block">
-              <ul className="menu menu-horizontal w-full justify-center gap-4 p-2">
-                {categoriesItems}
-              </ul>
+          <div className="sticky top-0 left-0 z-10 max-h-max bg-base-100">
+            <Header
+              searchSubmit={searchSubmit}
+              searchOnChange={searchOnChange}
+            />
+            <div className="w-full lg:bg-primary/20">
+              <div className="hidden flex-none lg:block">
+                <ul className="menu menu-horizontal w-full justify-center gap-4 p-2">
+                  {categoriesItems}
+                </ul>
+              </div>
             </div>
           </div>
           {children}
@@ -94,7 +99,7 @@ export const StoreLayout: React.FC<Props> = ({
       >
         <label
           htmlFor="menu-drawer"
-          className={`swap-rotate swap btn btn-circle lg:hidden ${
+          className={`swap-rotate swap btn-circle btn lg:hidden ${
             drawerOpen ? 'swap-active' : ''
           }`}
         >

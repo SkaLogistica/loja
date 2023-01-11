@@ -16,10 +16,7 @@ export const Header: React.FC<Props> = ({
   ...props
 }) => {
   return (
-    <header
-      className={`sticky top-0 left-0 z-10 max-h-max ${className}`}
-      {...props}
-    >
+    <header className={`${className}`} {...props}>
       <div className="flex flex-col items-center lg:flex-row lg:justify-start lg:pl-9 lg:pt-4">
         <Link href={'/'}>
           <Image
