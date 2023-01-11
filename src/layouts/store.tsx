@@ -88,7 +88,7 @@ export const StoreLayout: React.FC<Props> = ({
         </div>
         <div className="drawer-side">
           <label htmlFor="menu-drawer" className="drawer-overlay"></label>
-          <ul className="menu w-40 bg-base-100 p-4 md:w-80">
+          <ul className="menu w-2/3 bg-base-100 p-4 md:w-80">
             {categoriesItems}
           </ul>
         </div>
