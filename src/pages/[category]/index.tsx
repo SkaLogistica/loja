@@ -73,10 +73,11 @@ const CategoryPage: NextPage = () => {
               {product.photos.length > 0 ? (
                 <figure>
                   <Image
-                    width={400}
-                    height={400}
+                    width={256}
+                    height={256}
                     src={product.photos[0]?.url ?? ''}
                     alt={`Imagem do ${product.name}`}
+                    className="w-36 object-contain lg:w-64"
                   />
                 </figure>
               ) : (
