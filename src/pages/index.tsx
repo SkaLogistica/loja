@@ -1,12 +1,14 @@
 import { useState } from 'react'
 import { type NextPage } from 'next'
 import Image from 'next/image'
+import { useRouter } from 'next/router'
 
 import { StoreLayout } from '@root/layouts'
-import { currencyFormatter, trpc } from '@root/utils'
+import { currencyFormatter, stringifyQueryParam, trpc } from '@root/utils'
 
 const Home: NextPage = () => {
-  const [name, setName] = useState('')
+  const router = useRouter()
+  const [name, setName] = useState(stringifyQueryParam(router.query.busca))
   const [page, setPage] = useState(0)
   const productsPerPage = 12
 
@@ -27,6 +29,7 @@ const Home: NextPage = () => {
 
   return (
     <StoreLayout
+      defaultValue={name}
       searchSubmit={(e) => {
         e.preventDefault()
         refetch()
@@ -59,7 +62,12 @@ const Home: NextPage = () => {
                 <h2 className="card-title">{product.name}</h2>
                 <p>{currencyFormatter(Number(product.price))}</p>
                 <div className="card-actions justify-end">
-                  <button className="btn btn-primary">Comprar</button>
+                  <button
+                    className="btn btn-primary"
+                    onClick={() => router.push(`p/${product.name}`)}
+                  >
+                    Comprar
+                  </button>
                 </div>
               </div>
             </div>

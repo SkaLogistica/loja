@@ -5,6 +5,7 @@ import Link from 'next/link'
 import Logo from '../../public/logo.png'
 
 interface Props extends React.HTMLAttributes<HTMLHeadingElement> {
+  defaultValue?: string
   searchSubmit?: (e: FormEvent<HTMLFormElement>) => void
   searchOnChange?: (e: ChangeEvent<HTMLInputElement>) => void
 }
@@ -13,6 +14,7 @@ export const Header: React.FC<Props> = ({
   className,
   searchSubmit,
   searchOnChange,
+  defaultValue,
   ...props
 }) => {
   return (
@@ -35,6 +37,7 @@ export const Header: React.FC<Props> = ({
           <div className="input-group flex justify-center lg:ml-20 lg:justify-start">
             <input
               type="text"
+              defaultValue={defaultValue}
               placeholder="Search…"
               className="input-bordered input md:w-96"
               onChange={searchOnChange}

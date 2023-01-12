@@ -6,6 +6,7 @@ import { Head, Header } from '@root/components'
 import { trpc } from '@root/utils'
 
 interface Props extends React.HTMLAttributes<HTMLHeadingElement> {
+  defaultValue?: string
   searchSubmit?: (e: FormEvent<HTMLFormElement>) => void
   searchOnChange?: (e: ChangeEvent<HTMLInputElement>) => void
 }
@@ -13,6 +14,7 @@ interface Props extends React.HTMLAttributes<HTMLHeadingElement> {
 export const StoreLayout: React.FC<Props> = ({
   searchSubmit,
   searchOnChange,
+  defaultValue,
   children,
 }) => {
   const [drawerOpen, setDrawer] = useState(false)
@@ -75,6 +77,7 @@ export const StoreLayout: React.FC<Props> = ({
             <Header
               searchSubmit={searchSubmit}
               searchOnChange={searchOnChange}
+              defaultValue={defaultValue}
             />
             <div className="w-full lg:bg-primary/20">
               <div className="hidden flex-none lg:block">
@@ -99,7 +102,7 @@ export const StoreLayout: React.FC<Props> = ({
       >
         <label
           htmlFor="menu-drawer"
-          className={`swap-rotate swap btn-circle btn lg:hidden ${
+          className={`swap-rotate swap btn btn-circle lg:hidden ${
             drawerOpen ? 'swap-active' : ''
           }`}
         >
