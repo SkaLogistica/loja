@@ -21,7 +21,7 @@ enum Role {
 
 model Category {
   id            String        @id @default(cuid())
-  name          String
+  name          String        @unique
   bannerUrl     String
   visibility    Boolean       @default(true)
   subcategories SubCategory[]

@@ -1,3 +1,4 @@
+import { TRPCError } from '@trpc/server'
 import { z } from 'zod'
 
 import { formatAWSfileUrl } from '@root/server/common'
@@ -31,6 +32,28 @@ export const categoryRouter = router({
           subcategories: true,
         },
       })
+    }),
+  bannerUrl: publicProcedure
+    .input(
+      z
+        .object({
+          id: z.string().cuid(),
+        })
+        .or(
+          z.object({
+            name: z.string(),
+          })
+        )
+    )
+    .query(async ({ ctx, input }) => {
+      try {
+        const { bannerUrl } = await ctx.prisma.category.findUniqueOrThrow({
+          where: input,
+        })
+        return bannerUrl
+      } catch (error) {
+        throw new TRPCError({ code: 'NOT_FOUND' })
+      }
     }),
   createCategory: categoryProcedure
     .input(

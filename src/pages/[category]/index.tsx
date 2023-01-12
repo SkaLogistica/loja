@@ -11,10 +11,18 @@ const CategoryPage: NextPage = () => {
   const router = useRouter()
   const category = stringifyQueryParam(router.query.category)
 
-  const [categoryBannerUrl, setBannerUrl] = useState('')
   const [name, setName] = useState('')
   const [page, setPage] = useState(0)
   const productsPerPage = 12
+
+  const { data: categoryBannerUrl } = trpc.category.bannerUrl.useQuery(
+    {
+      name: category,
+    },
+    {
+      staleTime: Infinity,
+    }
+  )
 
   const { data: productsData, refetch } = trpc.product.getAllProducts.useQuery(
     {
@@ -24,11 +32,6 @@ const CategoryPage: NextPage = () => {
       take: productsPerPage,
     },
     {
-      onSuccess: (products) => {
-        if (products.length > 0) {
-          setBannerUrl(products[0]?.category?.bannerUrl ?? '')
-        }
-      },
       staleTime: Infinity,
     }
   )
@@ -59,13 +62,17 @@ const CategoryPage: NextPage = () => {
             </li>
           </ul>
         </div>
-        <Image
-          width={400}
-          height={400}
-          src={categoryBannerUrl}
-          alt={`Banner da categoria ${category}`}
-          className="hidden max-h-44 w-full md:block"
-        />
+        {categoryBannerUrl ? (
+          <Image
+            width={400}
+            height={400}
+            src={categoryBannerUrl}
+            alt={`Banner da categoria ${category}`}
+            className="hidden max-h-44 w-full md:block"
+          />
+        ) : (
+          <></>
+        )}
         <div className="box-border flex w-full flex-col items-center gap-y-4">
           <div className="grid grid-cols-1 gap-2 lg:grid-cols-2">
             {productsData?.map((product) => (
