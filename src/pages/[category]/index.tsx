@@ -48,6 +48,7 @@ const CategoryPage: NextPage = () => {
       }}
     >
       <main className="mt-4 flex w-full flex-1 flex-col items-center gap-y-4 md:items-start md:px-9 lg:px-24">
+        {/* TODO: could be a layout option to show breadcrumbs */}
         <div className="breadcrumbs text-sm">
           <ul>
             <li>
