@@ -25,6 +25,7 @@ export const StoreLayout: React.FC<Props> = ({
     }
   )
 
+  /* TODO: create components: CategoriesMenu, SubCategories{Menu,Disclosure} */
   const categoriesItems = categories?.map((category) => (
     <li tabIndex={0} key={category.id}>
       <span className="font-bold uppercase text-orange-500 [&_svg]:hover:rotate-180">
