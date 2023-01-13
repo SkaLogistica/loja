@@ -31,7 +31,7 @@ export const ProductCard: React.FC<{
         <div className="card-actions justify-end">
           <button
             className="btn-primary btn"
-            onClick={() => router.push(`p/${data.name}`)}
+            onClick={() => router.push(`/p/${data.name}`)}
           >
             Comprar
           </button>
