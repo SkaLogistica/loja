@@ -1,8 +1,9 @@
 export const PaginationButtonGroup: React.FC<{
   page: number
+  hidden?: boolean
   disableNext: boolean
   dispatcher: React.Dispatch<React.SetStateAction<number>>
-}> = ({ page, disableNext, dispatcher }) => {
+}> = ({ page, disableNext, dispatcher, hidden = false }) => {
   const previousPageCB = () => dispatcher((old) => Math.max(0, old - 1))
   const nextPageCB = () => dispatcher((old) => old + 1)
 
@@ -49,9 +50,9 @@ export const PaginationButtonGroup: React.FC<{
   )
 
   return (
-    <div className="btn-group grid grid-cols-3">
+    <div className={`btn-group grid grid-cols-3 ${hidden ? 'hidden' : ''}`}>
       <button
-        className="btn btn-ghost"
+        className="btn-ghost btn"
         disabled={!page}
         onClick={previousPageCB}
       >
@@ -61,7 +62,7 @@ export const PaginationButtonGroup: React.FC<{
         {page + 1}
       </div>
       <button
-        className="btn btn-ghost"
+        className="btn-ghost btn"
         disabled={disableNext}
         onClick={nextPageCB}
       >

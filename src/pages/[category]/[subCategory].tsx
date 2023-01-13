@@ -57,6 +57,7 @@ const SubCategoryPage: NextPage = () => {
         <div className="box-border flex w-full flex-col items-center gap-y-4">
           <ProductList data={productsData} />
           <PaginationButtonGroup
+            hidden={productsData === undefined || productsData?.length === 0}
             page={currentPage}
             dispatcher={setCurrentPage}
             disableNext={shouldDisableNextPage}

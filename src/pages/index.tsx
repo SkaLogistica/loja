@@ -52,6 +52,7 @@ const Home: NextPage = () => {
       <main className="flex w-full flex-1 flex-col items-center justify-center gap-4">
         <ProductList data={productsData} />
         <PaginationButtonGroup
+          hidden={productsData === undefined || productsData?.length === 0}
           page={currentPage}
           dispatcher={setCurrentPage}
           disableNext={shouldDisableNextPage}
