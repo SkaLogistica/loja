@@ -4,6 +4,7 @@ import type { AppRouter } from '@root/server/trpc/router/_app'
 
 import { ProductCard } from './productCard'
 
+/* TODO: add empty array UI */
 export const ProductList: React.FC<{
   data?: inferProcedureOutput<AppRouter['product']['getAllProducts']>
 }> = ({ data }) => {
