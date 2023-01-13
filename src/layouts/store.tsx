@@ -29,36 +29,44 @@ export const StoreLayout: React.FC<Props> = ({
     <li tabIndex={0} key={category.id}>
       <span className="font-bold uppercase text-orange-500 [&_svg]:hover:rotate-180">
         <Link href={`/${category.name}`}>{category.name}</Link>
-        <svg
-          xmlns="http://www.w3.org/2000/svg"
-          width="192"
-          height="192"
-          fill="#000000"
-          viewBox="0 0 256 256"
-          className="h-5 w-5 duration-700 ease-in-out"
-        >
-          <rect width="256" height="256" fill="none"></rect>
-          <polyline
-            points="208 96 128 176 48 96"
-            fill="none"
-            stroke="#000000"
-            stroke-linecap="round"
-            stroke-linejoin="round"
-            stroke-width="16"
-          ></polyline>
-        </svg>
+        {category.subcategories.length > 0 ? (
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            width="192"
+            height="192"
+            fill="#000000"
+            viewBox="0 0 256 256"
+            className="h-5 w-5 duration-700 ease-in-out"
+          >
+            <rect width="256" height="256" fill="none"></rect>
+            <polyline
+              points="208 96 128 176 48 96"
+              fill="none"
+              stroke="#000000"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="16"
+            ></polyline>
+          </svg>
+        ) : (
+          <></>
+        )}
       </span>
-      <ul className="rounded-box bg-base-100 p-2 shadow-lg lg:z-20">
-        {category.subcategories.map((subcategory) => (
-          <li key={subcategory.id}>
-            <span className="capitalize">
-              <Link href={`/${category.name}/${subcategory.name}`}>
-                {subcategory.name}
-              </Link>
-            </span>
-          </li>
-        ))}
-      </ul>
+      {category.subcategories.length > 0 ? (
+        <ul className="rounded-box bg-base-100 p-2 shadow-lg lg:z-20">
+          {category.subcategories.map((subcategory) => (
+            <li key={subcategory.id}>
+              <span className="capitalize">
+                <Link href={`/${category.name}/${subcategory.name}`}>
+                  {subcategory.name}
+                </Link>
+              </span>
+            </li>
+          ))}
+        </ul>
+      ) : (
+        <></>
+      )}
     </li>
   ))
 
