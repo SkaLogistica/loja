@@ -11,7 +11,7 @@ export const ProductList: React.FC<{
   if (!data) return <></>
 
   return (
-    <div className="grid grid-cols-1 gap-2 lg:grid-cols-2">
+    <div className="grid grid-cols-1 gap-2 lg:grid-cols-2 xl:grid-cols-3 xl:p-8">
       {data?.map((product) => (
         <ProductCard key={product.id} data={product} />
       ))}
