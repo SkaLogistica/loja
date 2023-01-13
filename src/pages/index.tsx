@@ -8,13 +8,15 @@ import { stringifyQueryParam, trpc } from '@root/utils'
 
 const Home: NextPage = () => {
   const router = useRouter()
-  const [name, setName] = useState(stringifyQueryParam(router.query.busca))
+  const [searchInput, setSearchInput] = useState<string>(
+    stringifyQueryParam(router.query.busca)
+  )
   const [currentPage, setCurrentPage] = useState(0)
   const productsPerPage = 12
 
-  const { data: productsData, refetch } = trpc.product.getAllProducts.useQuery(
+  const { data: productsData } = trpc.product.getAllProducts.useQuery(
     {
-      name: name !== '' ? name : undefined,
+      name: searchInput !== '' ? searchInput : undefined,
       skip: currentPage * productsPerPage,
       take: productsPerPage,
     },
@@ -29,13 +31,22 @@ const Home: NextPage = () => {
 
   return (
     <StoreLayout
-      defaultValue={name}
+      defaultValue={searchInput}
       searchSubmit={(e) => {
         e.preventDefault()
-        refetch()
       }}
       searchOnChange={(e) => {
-        setName(e.target.value)
+        setSearchInput(e.target.value)
+        router.push(
+          {
+            pathname: '/',
+            query: {
+              busca: e.target.value,
+            },
+          },
+          undefined,
+          { shallow: true }
+        )
       }}
     >
       <main className="flex w-full flex-1 flex-col items-center justify-center gap-4">

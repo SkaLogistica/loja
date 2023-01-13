@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useRef, useState } from 'react'
 import { type NextPage } from 'next'
 import { useRouter } from 'next/router'
 
@@ -15,13 +15,12 @@ const CategoryPage: NextPage = () => {
   const router = useRouter()
   const category = stringifyQueryParam(router.query.category)
 
-  const [name, setName] = useState('')
+  const searchInputRef = useRef<string>('')
   const [currentPage, setCurrentPage] = useState(0)
   const productsPerPage = 12
 
-  const { data: productsData, refetch } = trpc.product.getAllProducts.useQuery(
+  const { data: productsData } = trpc.product.getAllProducts.useQuery(
     {
-      name: name !== '' ? name : undefined,
       category,
       skip: currentPage * productsPerPage,
       take: productsPerPage,
@@ -39,10 +38,15 @@ const CategoryPage: NextPage = () => {
     <StoreLayout
       searchSubmit={(e) => {
         e.preventDefault()
-        refetch()
+        router.push({
+          pathname: '/',
+          query: {
+            busca: searchInputRef.current,
+          },
+        })
       }}
       searchOnChange={(e) => {
-        setName(e.target.value)
+        searchInputRef.current = e.target.value
       }}
     >
       <main className="mt-4 flex w-full flex-1 flex-col items-center gap-y-4 md:items-start md:px-9 lg:px-24">
