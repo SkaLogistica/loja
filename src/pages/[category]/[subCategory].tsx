@@ -37,8 +37,6 @@ const SubCategoryPage: NextPage = () => {
     ? productsData.length < productsPerPage
     : false
 
-  if (!productsData) return <></>
-
   return (
     <StoreLayout
       searchSubmit={(e) => {

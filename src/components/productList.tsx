@@ -5,8 +5,10 @@ import type { AppRouter } from '@root/server/trpc/router/_app'
 import { ProductCard } from './productCard'
 
 export const ProductList: React.FC<{
-  data: inferProcedureOutput<AppRouter['product']['getAllProducts']>
+  data?: inferProcedureOutput<AppRouter['product']['getAllProducts']>
 }> = ({ data }) => {
+  if (!data) return <></>
+
   return (
     <div className="grid grid-cols-1 gap-2 lg:grid-cols-2">
       {data?.map((product) => (

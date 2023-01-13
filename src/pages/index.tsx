@@ -27,8 +27,6 @@ const Home: NextPage = () => {
     ? productsData.length < productsPerPage
     : false
 
-  if (!productsData) return <></>
-
   return (
     <StoreLayout
       defaultValue={name}
