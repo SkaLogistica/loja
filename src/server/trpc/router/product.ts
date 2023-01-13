@@ -72,11 +72,17 @@ export const productRouter = router({
         skip: input.skip,
       })
     }),
-  getProduct: productProcedure
+  getProduct: publicProcedure
     .input(
-      z.object({
-        id: z.string().cuid(),
-      })
+      z
+        .object({
+          id: z.string().cuid(),
+        })
+        .or(
+          z.object({
+            name: z.string(),
+          })
+        )
     )
     .query(({ ctx, input }) => {
       return ctx.prisma.product.findUnique({
