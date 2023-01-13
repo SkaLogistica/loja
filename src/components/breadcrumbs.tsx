@@ -4,23 +4,26 @@ export const Breadcrumbs: React.FC<{
   category?: string
   subCategory?: string
 }> = ({ category, subCategory }) => {
-  const CategoryLink: React.FC<{ name?: string }> = ({ name }) => {
+  const CategoryLink: React.FC<{ name?: string; url?: string }> = ({
+    name,
+    url,
+  }) => {
     if (!name) return <></>
 
     return (
       <li>
-        <Link href={`/${name}`}>{name}</Link>
+        <Link href={`/${url ?? name}`}>{name}</Link>
       </li>
     )
   }
 
-  const CategoryList: React.FC<{ names: (string | undefined)[] }> = ({
-    names,
-  }) => {
+  const CategoryList: React.FC<{
+    categories: { name: string | undefined; url?: string | undefined }[]
+  }> = ({ categories }) => {
     return (
       <>
-        {names.map((name) => (
-          <CategoryLink key={name} name={name} />
+        {categories.map((props) => (
+          <CategoryLink key={props.name} {...props} />
         ))}
       </>
     )
@@ -32,7 +35,12 @@ export const Breadcrumbs: React.FC<{
         <li>
           <Link href="/">Página Inicial</Link>
         </li>
-        <CategoryList names={[category, subCategory]} />
+        <CategoryList
+          categories={[
+            { name: category },
+            { name: subCategory, url: `${category}/${subCategory}` },
+          ]}
+        />
       </ul>
     </div>
   )
