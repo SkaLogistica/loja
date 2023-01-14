@@ -30,10 +30,12 @@ export const ProductCard: React.FC<{
         <p>{currencyFormatter(Number(data.price))}</p>
         <div className="card-actions justify-end">
           <button
-            className="btn-primary btn"
+            className="btn btn-primary"
             onClick={() => router.push(`/p/${data.name}`)}
           >
-            Comprar
+            <a href={`/p/${data.name}`} className="uppercase">
+              acessar
+            </a>
           </button>
         </div>
       </div>
