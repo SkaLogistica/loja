@@ -75,9 +75,9 @@ const ProductPage: NextPage = () => {
       searchSubmit={(e) => {
         e.preventDefault()
         router.push({
-          pathname: '/',
+          pathname: '/busca',
           query: {
-            busca: searchInputRef.current,
+            nome: searchInputRef.current,
           },
         })
       }}
