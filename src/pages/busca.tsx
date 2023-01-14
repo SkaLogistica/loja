@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import { type NextPage } from 'next'
 import { useRouter } from 'next/router'
+import { useDebounce } from 'use-debounce'
 
 import { PaginationButtonGroup, ProductList } from '@root/components'
 import { StoreLayout } from '@root/layouts'
@@ -11,12 +12,13 @@ const Busca: NextPage = () => {
   const [searchInput, setSearchInput] = useState<string>(
     stringifyQueryParam(router.query.nome)
   )
+  const [debouncedSearchInput] = useDebounce(searchInput, 1000)
   const [currentPage, setCurrentPage] = useState(0)
   const productsPerPage = 12
 
   const { data: productsData } = trpc.product.all.useQuery(
     {
-      name: searchInput !== '' ? searchInput : undefined,
+      name: debouncedSearchInput !== '' ? debouncedSearchInput : undefined,
       skip: currentPage * productsPerPage,
       take: productsPerPage,
     },
