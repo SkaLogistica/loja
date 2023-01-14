@@ -46,6 +46,8 @@ model Product {
   hiddenPrice   Boolean      @default(true)
   available     Boolean      @default(false)
   photos        Photo[]
+  views         BigInt       @default(0) @db.UnsignedBigInt
+  purchases     BigInt       @default(0) @db.UnsignedBigInt
   category      Category?    @relation(fields: [categoryId], references: [id])
   categoryId    String?
   subCategory   SubCategory? @relation(fields: [subCategoryId], references: [id])

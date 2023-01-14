@@ -1,62 +1,59 @@
-import { useState } from 'react'
+import { useRef } from 'react'
 import { type NextPage } from 'next'
 import { useRouter } from 'next/router'
 
-import { PaginationButtonGroup, ProductList } from '@root/components'
+import { ProductList } from '@root/components'
 import { StoreLayout } from '@root/layouts'
-import { stringifyQueryParam, trpc } from '@root/utils'
+import { trpc } from '@root/utils'
 
 const Home: NextPage = () => {
   const router = useRouter()
-  const [searchInput, setSearchInput] = useState<string>(
-    stringifyQueryParam(router.query.busca)
-  )
-  const [currentPage, setCurrentPage] = useState(0)
-  const productsPerPage = 12
+  const searchInputRef = useRef<string>('')
 
-  const { data: productsData } = trpc.product.all.useQuery(
+  const { data: productsRankedByViews } = trpc.product.all.useQuery(
     {
-      name: searchInput !== '' ? searchInput : undefined,
-      skip: currentPage * productsPerPage,
-      take: productsPerPage,
+      take: 10,
+      orderBy: {
+        views: 'desc',
+      },
     },
     {
       staleTime: Infinity,
     }
   )
 
-  const shouldDisableNextPage = productsData
-    ? productsData.length < productsPerPage
-    : false
+  const { data: productsRankedByPurchases } = trpc.product.all.useQuery(
+    {
+      take: 10,
+      orderBy: {
+        purchases: 'desc',
+      },
+    },
+    {
+      staleTime: Infinity,
+    }
+  )
 
   return (
     <StoreLayout
-      defaultValue={searchInput}
       searchSubmit={(e) => {
         e.preventDefault()
+        router.push({
+          pathname: '/busca',
+          query: {
+            nome: searchInputRef.current,
+          },
+        })
       }}
       searchOnChange={(e) => {
-        setSearchInput(e.target.value)
-        router.push(
-          {
-            pathname: '/',
-            query: {
-              busca: e.target.value,
-            },
-          },
-          undefined,
-          { shallow: true }
-        )
+        searchInputRef.current = e.target.value
       }}
     >
       <main className="flex w-full flex-1 flex-col items-center justify-center gap-4">
-        <ProductList data={productsData} />
-        <PaginationButtonGroup
-          hidden={productsData === undefined || productsData?.length === 0}
-          page={currentPage}
-          dispatcher={setCurrentPage}
-          disableNext={shouldDisableNextPage}
-        />
+        <h2 className="pt-4 text-xl font-bold">Produtos mais visitados</h2>
+        <ProductList data={productsRankedByViews} />
+        <h2 className="text-xl font-bold">Produtos mais comprados</h2>
+        <ProductList data={productsRankedByPurchases} />
       </main>
     </StoreLayout>
   )

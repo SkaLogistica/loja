@@ -1,4 +1,5 @@
 import { Prisma } from '@prisma/client'
+import { TRPCError } from '@trpc/server'
 import isDecimal from 'validator/lib/isDecimal'
 import { z } from 'zod'
 
@@ -21,6 +22,12 @@ export const productRouter = router({
         subCategory: z.string().optional(),
         take: z.number().gte(0).optional(),
         skip: z.number().gte(0).optional(),
+        orderBy: z
+          .object({
+            views: z.enum(['asc', 'desc']).optional(),
+            purchases: z.enum(['asc', 'desc']).optional(),
+          })
+          .optional(),
       })
     )
     .query(({ ctx, input }) => {
@@ -70,6 +77,7 @@ export const productRouter = router({
         },
         take: input.take,
         skip: input.skip,
+        orderBy: input.orderBy,
       })
     }),
   get: publicProcedure
@@ -77,15 +85,19 @@ export const productRouter = router({
       z
         .object({
           id: z.string().cuid(),
+          name: z.undefined(),
+          view: z.boolean().default(false),
         })
         .or(
           z.object({
+            id: z.undefined(),
             name: z.string(),
+            view: z.boolean().default(true),
           })
         )
     )
-    .query(({ ctx, input }) => {
-      return ctx.prisma.product.findUnique({
+    .query(async ({ ctx, input: { view, ...input } }) => {
+      const product = await ctx.prisma.product.findUnique({
         where: input,
         include: {
           category: true,
@@ -93,6 +105,41 @@ export const productRouter = router({
           photos: true,
         },
       })
+
+      if (!product) {
+        throw new TRPCError({ code: 'NOT_FOUND' })
+      }
+
+      if (view) {
+        await ctx.prisma.product.update({
+          where: {
+            id: product.id,
+          },
+          data: {
+            views: {
+              increment: 1,
+            },
+          },
+        })
+      }
+
+      return product
+    }),
+  buy: publicProcedure
+    .input(z.object({ id: z.string().cuid() }))
+    .mutation(({ ctx, input }) => {
+      try {
+        return ctx.prisma.product.update({
+          where: input,
+          data: {
+            purchases: {
+              increment: 1,
+            },
+          },
+        })
+      } catch (error) {
+        throw new TRPCError({ code: 'NOT_FOUND' })
+      }
     }),
   create: productProcedure
     .input(

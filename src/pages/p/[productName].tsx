@@ -70,6 +70,10 @@ const ProductPage: NextPage = () => {
     }
   )
 
+  const { mutate } = trpc.product.buy.useMutation()
+
+  const buyProduct = () => mutate({ id: productData?.id ?? '' })
+
   return (
     <StoreLayout
       searchSubmit={(e) => {
@@ -103,7 +107,12 @@ const ProductPage: NextPage = () => {
               </div>
             </div>
           </div>
-          <button className="btn btn-primary w-full max-w-2xl">Comprar</button>
+          <button
+            className="btn btn-primary w-full max-w-2xl"
+            onClick={buyProduct}
+          >
+            Comprar
+          </button>
         </div>
       </main>
     </StoreLayout>
