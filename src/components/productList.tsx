@@ -6,7 +6,7 @@ import { ProductCard } from './productCard'
 
 /* TODO: add empty array UI */
 export const ProductList: React.FC<{
-  data?: inferProcedureOutput<AppRouter['product']['getAllProducts']>
+  data?: inferProcedureOutput<AppRouter['product']['all']>
 }> = ({ data }) => {
   if (!data) return <></>
 

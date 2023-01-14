@@ -84,7 +84,7 @@ const EditarProduto: NextPage = () => {
 
   const isLocalUrl = (url: string) => url.startsWith('blob')
 
-  const { data: product } = trpc.product.getProduct.useQuery(
+  const { data: product } = trpc.product.get.useQuery(
     {
       id,
     },
@@ -114,7 +114,7 @@ const EditarProduto: NextPage = () => {
     }
   )
 
-  const { mutate: updateProduct } = trpc.product.updateProduct.useMutation({
+  const { mutate: updateProduct } = trpc.product.update.useMutation({
     onSuccess: (product) => {
       addFeedback(`Produto ${product.name} atualizado`)
     },
@@ -139,7 +139,7 @@ const EditarProduto: NextPage = () => {
       <nav className="navbar bg-base-100">
         <div className="navbar-start">
           <button
-            className="btn-ghost btn-square btn"
+            className="btn btn-ghost btn-square"
             onClick={() => setSidePanelState((old) => !old)}
           >
             <svg
@@ -159,10 +159,12 @@ const EditarProduto: NextPage = () => {
           </button>
         </div>
         <div className="navbar-center">
-          <div className="text-xl font-bold normal-case breadcrumbs">
+          <div className="breadcrumbs text-xl font-bold normal-case">
             <ul>
-              <li><Link href={'/admin/produtos'}>Produtos</Link></li> 
-              <li>{name}</li> 
+              <li>
+                <Link href={'/admin/produtos'}>Produtos</Link>
+              </li>
+              <li>{name}</li>
             </ul>
           </div>
         </div>
@@ -178,7 +180,7 @@ const EditarProduto: NextPage = () => {
             >
               <li>
                 <button
-                  className="btn-primary btn"
+                  className="btn btn-primary"
                   onClick={
                     sessionData ? () => signOut() : () => signIn('google')
                   }
@@ -236,7 +238,7 @@ const EditarProduto: NextPage = () => {
                 <div key={url} className="indicator">
                   <div className="indicator-item">
                     <button
-                      className="btn-ghost btn-square btn bg-red-500 text-base-100"
+                      className="btn btn-ghost btn-square bg-red-500 text-base-100"
                       onClick={() => {
                         deleteFile({ file, url })
                         if (photoId === undefined) return
@@ -261,7 +263,7 @@ const EditarProduto: NextPage = () => {
                       </svg>
                     </button>
                   </div>
-                  <button className="btn-ghost btn lowercase">
+                  <button className="btn btn-ghost lowercase">
                     <a
                       href={url ?? '#'}
                       className="link"
@@ -418,13 +420,13 @@ const EditarProduto: NextPage = () => {
         </div>
       </main>
       <aside
-        className={`fixed z-20 top-0 overflow-auto bg-white transition-all duration-300 ease-in-out ${
+        className={`fixed top-0 z-20 overflow-auto bg-white transition-all duration-300 ease-in-out ${
           isSidePanelOpen ? 'translate-x-0' : '-translate-x-full'
         }`}
       >
         <div className="flex h-screen w-auto items-start justify-start gap-2 bg-black/50 pt-5 pl-5 pr-20">
           <button
-            className="btn-ghost btn text-base-100"
+            className="btn btn-ghost text-base-100"
             onClick={() => setSidePanelState(false)}
           >
             Fechar
@@ -470,4 +472,4 @@ const EditarProduto: NextPage = () => {
   )
 }
 
-export default withAuth(EditarProduto, { allowedRoles: ['Admin', 'Editor']})
+export default withAuth(EditarProduto, { allowedRoles: ['Admin', 'Editor'] })

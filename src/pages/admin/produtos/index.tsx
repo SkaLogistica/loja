@@ -4,7 +4,13 @@ import Head from 'next/head'
 import Link from 'next/link'
 import { signIn, signOut, useSession } from 'next-auth/react'
 
-import { currencyFormatter, getAvatarImg, trpc, useFeedback, withAuth } from '@root/utils'
+import {
+  currencyFormatter,
+  getAvatarImg,
+  trpc,
+  useFeedback,
+  withAuth,
+} from '@root/utils'
 
 const Produtos: NextPage = () => {
   const { data: sessionData } = useSession()
@@ -27,7 +33,7 @@ const Produtos: NextPage = () => {
     name !== '' || categoryId !== '' || subCategoryId !== ''
 
   const { data: productsData, refetch: reloadProducts } =
-    trpc.product.getAllProducts.useQuery(
+    trpc.product.all.useQuery(
       {
         name: name !== '' ? name : undefined,
         categoryId: categoryId !== '' ? categoryId : undefined,
@@ -40,7 +46,7 @@ const Produtos: NextPage = () => {
       }
     )
 
-  const { mutate: createProduct } = trpc.product.createProduct.useMutation({
+  const { mutate: createProduct } = trpc.product.create.useMutation({
     onSuccess: (product) => {
       addFeedback(`Produto ${product.name} criado`)
       clearFilters()
@@ -49,7 +55,7 @@ const Produtos: NextPage = () => {
     onError: (error) => addFeedback(`ERRO: ${error.message}`),
   })
 
-  const { mutate: updateProduct } = trpc.product.updateProduct.useMutation({
+  const { mutate: updateProduct } = trpc.product.update.useMutation({
     onSuccess: (product) => {
       addFeedback(`Produto ${product.name} atualizado`)
       reloadProducts()
@@ -87,7 +93,7 @@ const Produtos: NextPage = () => {
     }
   )
 
-  const { mutate: deleteProduct } = trpc.product.deleteProduct.useMutation({
+  const { mutate: deleteProduct } = trpc.product.delete.useMutation({
     onSuccess: (product) => {
       addFeedback(`Produto ${product.name} deletado`)
       reloadProducts()
@@ -97,8 +103,10 @@ const Produtos: NextPage = () => {
 
   const [isSidePanelOpen, setSidePanelState] = useState(false)
 
-  const disableNextPage = productsData ? (productsData.length < productsPerPage) : false;
-  
+  const disableNextPage = productsData
+    ? productsData.length < productsPerPage
+    : false
+
   return (
     <>
       <Head>
@@ -244,7 +252,9 @@ const Produtos: NextPage = () => {
               >
                 Anterior
               </button>
-              <button className="border border-black font-bold uppercase text-black bg-neutral">Página {page + 1}</button>
+              <button className="border border-black bg-neutral font-bold uppercase text-black">
+                Página {page + 1}
+              </button>
               <button
                 className="btn-outline btn"
                 disabled={disableNextPage}
@@ -348,7 +358,7 @@ const Produtos: NextPage = () => {
         </div>
       </main>
       <aside
-        className={`fixed z-20 top-0 overflow-auto bg-white transition-all duration-300 ease-in-out ${
+        className={`fixed top-0 z-20 overflow-auto bg-white transition-all duration-300 ease-in-out ${
           isSidePanelOpen ? 'translate-x-0' : '-translate-x-full'
         }`}
       >
@@ -400,4 +410,4 @@ const Produtos: NextPage = () => {
   )
 }
 
-export default withAuth(Produtos, { allowedRoles: ['Admin', 'Editor']})
+export default withAuth(Produtos, { allowedRoles: ['Admin', 'Editor'] })

@@ -11,7 +11,7 @@ export const productProcedure = createRbacProcedure({
 })
 
 export const productRouter = router({
-  getAllProducts: publicProcedure
+  all: publicProcedure
     .input(
       z.object({
         name: z.string().optional(),
@@ -72,7 +72,7 @@ export const productRouter = router({
         skip: input.skip,
       })
     }),
-  getProduct: publicProcedure
+  get: publicProcedure
     .input(
       z
         .object({
@@ -94,7 +94,7 @@ export const productRouter = router({
         },
       })
     }),
-  createProduct: productProcedure
+  create: productProcedure
     .input(
       z.object({
         name: z.string(),
@@ -152,7 +152,7 @@ export const productRouter = router({
         },
       })
     }),
-  updateProduct: productProcedure
+  update: productProcedure
     .input(
       z.object({
         id: z.string().cuid(),
@@ -213,7 +213,7 @@ export const productRouter = router({
         },
       })
     }),
-  deleteProduct: productProcedure
+  delete: productProcedure
     .input(z.object({ id: z.string().cuid() }))
     .mutation(async ({ ctx, input }) => {
       // TODO: delete photo from AWS before delete product

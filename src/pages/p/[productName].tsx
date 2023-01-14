@@ -10,7 +10,7 @@ import type { AppRouter } from '@root/server/trpc/router/_app'
 import { currencyFormatter, stringifyQueryParam, trpc } from '@root/utils'
 
 const PhotosCarousel: React.FC<{
-  product?: inferProcedureOutput<AppRouter['product']['getProduct']>
+  product?: inferProcedureOutput<AppRouter['product']['get']>
   selectedUrl?: string
   callback?: (url: string) => void
 }> = ({ product }) => {
@@ -61,7 +61,7 @@ const ProductPage: NextPage = () => {
   const searchInputRef = useRef<string>('')
   const name = stringifyQueryParam(router.query.productName)
 
-  const { data: productData } = trpc.product.getProduct.useQuery(
+  const { data: productData } = trpc.product.get.useQuery(
     {
       name,
     },
@@ -103,7 +103,7 @@ const ProductPage: NextPage = () => {
               </div>
             </div>
           </div>
-          <button className="btn-primary btn w-full max-w-2xl">Comprar</button>
+          <button className="btn btn-primary w-full max-w-2xl">Comprar</button>
         </div>
       </main>
     </StoreLayout>

@@ -6,7 +6,7 @@ import type { AppRouter } from '@root/server/trpc/router/_app'
 import { currencyFormatter } from '@root/utils'
 
 export const ProductCard: React.FC<{
-  data: inferProcedureOutput<AppRouter['product']['getAllProducts']>[number]
+  data: inferProcedureOutput<AppRouter['product']['all']>[number]
 }> = ({ data }) => {
   const router = useRouter()
 

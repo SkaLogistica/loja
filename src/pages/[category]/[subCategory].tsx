@@ -20,7 +20,7 @@ const SubCategoryPage: NextPage = () => {
   const [currentPage, setCurrentPage] = useState(0)
   const productsPerPage = 12
 
-  const { data: productsData } = trpc.product.getAllProducts.useQuery(
+  const { data: productsData } = trpc.product.all.useQuery(
     {
       category,
       subCategory,
