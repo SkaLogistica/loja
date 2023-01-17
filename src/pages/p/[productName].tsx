@@ -21,8 +21,8 @@ const PhotosCarousel: React.FC<{
   if (!product) return <></>
 
   return (
-    <div className="flex gap-2">
-      <ul className="carousel-vertical carousel h-96 max-w-sm gap-4 py-2">
+    <div className="flex flex-col-reverse gap-2 md:flex-row ">
+      <ul className="carousel gap-4 py-2 md:h-96 md:carousel-vertical">
         {product.photos.map((photo) => (
           <li key={photo.id} className="carousel-item">
             <button
@@ -44,14 +44,29 @@ const PhotosCarousel: React.FC<{
           </li>
         ))}
       </ul>
-      <div className="h-96 w-96">
-        <Image
-          src={photoUrl ?? ''}
-          width={384}
-          height={384}
-          alt={`Imagem do produto ${product.name}`}
-        />
-      </div>
+      <Image
+        src={photoUrl ?? ''}
+        width={384}
+        height={384}
+        alt={`Imagem do produto ${product.name}`}
+        className="h-[15rem] w-[15rem] md:h-96 md:w-96 "
+      />
+    </div>
+  )
+}
+
+const ActionButtonGroup: React.FC<{
+  className?: string
+  callback: () => void
+}> = ({ callback, className }) => {
+  return (
+    <div className={`w-full flex-col items-center gap-y-4 ${className}`}>
+      <button
+        className="btn-primary btn w-full max-w-xs md:max-w-xl"
+        onClick={callback}
+      >
+        Comprar
+      </button>
     </div>
   )
 }
@@ -94,25 +109,34 @@ const ProductPage: NextPage = () => {
           category={productData?.category?.name}
           subCategory={productData?.subCategory?.name}
         />
-        <div className="box-border flex w-full flex-col items-center gap-y-4">
-          <div className="flex gap-4">
+        <div className="box-border flex w-full flex-col items-center gap-y-4 md:items-start">
+          <div className="flex w-full flex-col items-center md:flex-row md:items-start">
+            <h2 className="text-3xl font-bold md:hidden">
+              {productData?.name}
+            </h2>
             <PhotosCarousel product={productData} />
-            <div>
-              <h2 className="text-3xl font-bold">{productData?.name}</h2>
-              <p>{productData?.description}</p>
-              <div className="flex flex-col items-end">
-                <p className="text-xl font-bold">
-                  {currencyFormatter(Number(productData?.price ?? 0))}
-                </p>
+            <div className="flex h-full flex-1 flex-col items-center justify-between px-4 lg:px-8 xl:px-16">
+              <div className="flex w-full flex-col">
+                <h2 className="hidden text-3xl font-bold md:block">
+                  {productData?.name}
+                </h2>
+                <p>{productData?.description}</p>
+                <div className="flex w-full flex-col items-end">
+                  <p className="text-3xl font-bold md:text-xl">
+                    {currencyFormatter(Number(productData?.price ?? 0))}
+                  </p>
+                </div>
               </div>
+              <ActionButtonGroup
+                callback={buyProduct}
+                className="hidden md:flex"
+              />
             </div>
+            <ActionButtonGroup
+              callback={buyProduct}
+              className="flex md:hidden"
+            />
           </div>
-          <button
-            className="btn btn-primary w-full max-w-2xl"
-            onClick={buyProduct}
-          >
-            Comprar
-          </button>
         </div>
       </main>
     </StoreLayout>
