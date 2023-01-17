@@ -4,7 +4,7 @@ import { type NextPage } from 'next'
 import Image from 'next/image'
 import { useRouter } from 'next/router'
 
-import { Breadcrumbs } from '@root/components'
+import { Breadcrumbs, ProductList } from '@root/components'
 import { env } from '@root/env/client.mjs'
 import { StoreLayout } from '@root/layouts'
 import type { AppRouter } from '@root/server/trpc/router/_app'
@@ -133,6 +133,16 @@ const ProductPage: NextPage = () => {
 
   const { mutate } = trpc.product.buy.useMutation()
 
+  const { data: productsData } = trpc.product.all.useQuery(
+    {
+      category: productData?.category?.name,
+      take: 10,
+    },
+    {
+      staleTime: Infinity,
+    }
+  )
+
   const buyProduct = () => mutate({ id: productData?.id ?? '' })
   const whatsAppProductUrl = `https://wa.me/${
     env.NEXT_PUBLIC_PHONE
@@ -193,6 +203,10 @@ const ProductPage: NextPage = () => {
               />
               <Button disabled>Adicionar ao Carrinho</Button>
             </div>
+          </div>
+          <div className="flex w-full flex-1 flex-col items-center justify-center gap-2 p-4 md:items-start md:p-0">
+            <h2 className="text-3xl font-bold">Outros produtos</h2>
+            <ProductList data={productsData} />
           </div>
         </div>
       </main>
