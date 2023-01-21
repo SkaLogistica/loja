@@ -6,6 +6,16 @@ import { ProductList } from '@root/components'
 import { StoreLayout } from '@root/layouts'
 import { trpc } from '@root/utils'
 
+const SessionHeader: React.FC<{ title: string }> = ({ title }) => {
+  return (
+    <div className="sticky top-28 z-10 flex w-full items-center justify-center md:top-32 lg:top-36">
+      <h2 className="max-w-fit rounded-full bg-orange-100 p-2 text-xl font-bold">
+        {title}
+      </h2>
+    </div>
+  )
+}
+
 const Home: NextPage = () => {
   const router = useRouter()
   const searchInputRef = useRef<string>('')
@@ -50,17 +60,9 @@ const Home: NextPage = () => {
       }}
     >
       <main className="flex w-full flex-1 flex-col items-center justify-center gap-4">
-        <div className="sticky top-28 z-10 flex w-full items-center justify-center md:top-32">
-          <h2 className="max-w-fit rounded-full bg-orange-100 p-2 text-xl font-bold">
-            Produtos mais visitados
-          </h2>
-        </div>
+        <SessionHeader title="Produtos mais visitados" />
         <ProductList data={productsRankedByViews} />
-        <div className="sticky top-28 z-10 flex w-full items-center justify-center md:top-32">
-          <h2 className="max-w-fit rounded-full bg-orange-100 p-2 text-xl font-bold">
-            Produtos mais comprados
-          </h2>
-        </div>
+        <SessionHeader title="Produtos mais comprados" />
         <ProductList data={productsRankedByPurchases} />
       </main>
     </StoreLayout>
