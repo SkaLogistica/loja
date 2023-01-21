@@ -132,6 +132,11 @@ export const StoreLayout: React.FC<Props> = ({
             <div className="w-full lg:bg-primary/20">
               <div className="hidden flex-none lg:block">
                 <ul className="menu menu-horizontal w-full justify-center gap-4 p-2">
+                  <li>
+                    <span className="font-bold uppercase text-orange-500 [&_svg]:hover:rotate-180">
+                      <Link href={`/`}>Página Inicial</Link>
+                    </span>
+                  </li>
                   {categoriesItems}
                 </ul>
               </div>
@@ -143,6 +148,11 @@ export const StoreLayout: React.FC<Props> = ({
           <label htmlFor="menu-drawer" className="drawer-overlay"></label>
           <ul className="menu w-2/3 bg-base-100 p-4 md:w-80">
             <ToggleMenu active={drawerOpen} />
+            <li>
+              <span className="font-bold uppercase text-orange-500 [&_svg]:hover:rotate-180">
+                <Link href={`/`}>Página Inicial</Link>
+              </span>
+            </li>
             {categoriesItems}
           </ul>
         </div>
