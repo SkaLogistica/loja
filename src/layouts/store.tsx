@@ -11,6 +11,44 @@ interface Props extends React.HTMLAttributes<HTMLHeadingElement> {
   searchOnChange?: (e: ChangeEvent<HTMLInputElement>) => void
 }
 
+const HamburguerIcon: React.FC<{ className?: string }> = ({ className }) => {
+  return (
+    <svg
+      className={className}
+      xmlns="http://www.w3.org/2000/svg"
+      width="32"
+      height="32"
+      viewBox="0 0 512 512"
+    >
+      <path d="M64,384H448V341.33H64Zm0-106.67H448V234.67H64ZM64,128v42.67H448V128Z" />
+    </svg>
+  )
+}
+const CloseIcon: React.FC<{ className?: string }> = ({ className }) => {
+  return (
+    <svg
+      className={className}
+      xmlns="http://www.w3.org/2000/svg"
+      width="32"
+      height="32"
+      viewBox="0 0 512 512"
+    >
+      <polygon points="400 145.49 366.51 112 256 222.51 145.49 112 112 145.49 222.51 256 112 366.51 145.49 400 256 289.49 366.51 400 400 366.51 289.49 256 400 145.49" />
+    </svg>
+  )
+}
+const ToggleMenu: React.FC<{ active: boolean }> = ({ active }) => {
+  return (
+    <label
+      htmlFor="menu-drawer"
+      className={`swap-rotate swap lg:hidden ${active ? 'swap-active' : ''}`}
+    >
+      <HamburguerIcon className="swap-off fill-current" />
+      <CloseIcon className="swap-on fill-current" />
+    </label>
+  )
+}
+
 export const StoreLayout: React.FC<Props> = ({
   searchSubmit,
   searchOnChange,
@@ -83,6 +121,9 @@ export const StoreLayout: React.FC<Props> = ({
         <div className="drawer-content flex flex-col">
           <Head />
           <div className="sticky top-0 left-0 z-10 max-h-max bg-base-100">
+            <div className="fixed top-4 left-8 z-20">
+              <ToggleMenu active={drawerOpen} />
+            </div>
             <Header
               searchSubmit={searchSubmit}
               searchOnChange={searchOnChange}
@@ -101,39 +142,10 @@ export const StoreLayout: React.FC<Props> = ({
         <div className="drawer-side">
           <label htmlFor="menu-drawer" className="drawer-overlay"></label>
           <ul className="menu w-2/3 bg-base-100 p-4 md:w-80">
+            <ToggleMenu active={drawerOpen} />
             {categoriesItems}
           </ul>
         </div>
-      </div>
-      <div
-        className="tooltip fixed bottom-8 right-8"
-        data-tip={`${drawerOpen ? 'Fechar' : 'Abrir'} Menu`}
-      >
-        <label
-          htmlFor="menu-drawer"
-          className={`swap-rotate swap btn btn-circle lg:hidden ${
-            drawerOpen ? 'swap-active' : ''
-          }`}
-        >
-          <svg
-            className="swap-off fill-current"
-            xmlns="http://www.w3.org/2000/svg"
-            width="32"
-            height="32"
-            viewBox="0 0 512 512"
-          >
-            <path d="M64,384H448V341.33H64Zm0-106.67H448V234.67H64ZM64,128v42.67H448V128Z" />
-          </svg>
-          <svg
-            className="swap-on fill-current"
-            xmlns="http://www.w3.org/2000/svg"
-            width="32"
-            height="32"
-            viewBox="0 0 512 512"
-          >
-            <polygon points="400 145.49 366.51 112 256 222.51 145.49 112 112 145.49 222.51 256 112 366.51 145.49 400 256 289.49 366.51 400 400 366.51 289.49 256 400 145.49" />
-          </svg>
-        </label>
       </div>
     </div>
   )
