@@ -1,6 +1,5 @@
 import type { inferProcedureOutput } from '@trpc/server'
 import Image from 'next/image'
-import { useRouter } from 'next/router'
 
 import type { AppRouter } from '@root/server/trpc/router/_app'
 import { currencyFormatter } from '@root/utils'
@@ -8,10 +7,11 @@ import { currencyFormatter } from '@root/utils'
 export const ProductCard: React.FC<{
   data: inferProcedureOutput<AppRouter['product']['all']>[number]
 }> = ({ data }) => {
-  const router = useRouter()
-
   return (
-    <div className="card border bg-base-100 shadow-xl lg:card-side">
+    <a
+      className="card border bg-base-100 shadow-xl lg:card-side"
+      href={`/p/${data.name}`}
+    >
       {data.photos.length > 0 ? (
         <figure>
           <Image
@@ -29,16 +29,11 @@ export const ProductCard: React.FC<{
         <h2 className="card-title">{data.name}</h2>
         <p>{currencyFormatter(Number(data.price))}</p>
         <div className="card-actions justify-end">
-          <button
-            className="btn btn-primary"
-            onClick={() => router.push(`/p/${data.name}`)}
-          >
-            <a href={`/p/${data.name}`} className="uppercase">
-              acessar
-            </a>
-          </button>
+          <a href={`/p/${data.name}`} className="btn-primary btn uppercase">
+            acessar
+          </a>
         </div>
       </div>
-    </div>
+    </a>
   )
 }
