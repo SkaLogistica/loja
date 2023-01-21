@@ -8,10 +8,8 @@ import { trpc } from '@root/utils'
 
 const SessionHeader: React.FC<{ title: string }> = ({ title }) => {
   return (
-    <div className="sticky top-28 z-10 flex w-full items-center justify-center md:top-32 lg:top-36">
-      <h2 className="max-w-fit rounded-full bg-orange-100 p-2 text-xl font-bold">
-        {title}
-      </h2>
+    <div className="flex w-full items-center justify-center">
+      <h2 className="max-w-fit p-2 text-xl font-bold">{title}</h2>
     </div>
   )
 }
