@@ -50,9 +50,17 @@ const Home: NextPage = () => {
       }}
     >
       <main className="flex w-full flex-1 flex-col items-center justify-center gap-4">
-        <h2 className="pt-4 text-xl font-bold">Produtos mais visitados</h2>
+        <div className="sticky top-28 z-10 flex w-full items-center justify-center md:top-32">
+          <h2 className="max-w-fit rounded-full bg-orange-100 p-2 text-xl font-bold">
+            Produtos mais visitados
+          </h2>
+        </div>
         <ProductList data={productsRankedByViews} />
-        <h2 className="text-xl font-bold">Produtos mais comprados</h2>
+        <div className="sticky top-28 z-10 flex w-full items-center justify-center md:top-32">
+          <h2 className="max-w-fit rounded-full bg-orange-100 p-2 text-xl font-bold">
+            Produtos mais comprados
+          </h2>
+        </div>
         <ProductList data={productsRankedByPurchases} />
       </main>
     </StoreLayout>
