@@ -38,7 +38,7 @@ export const Header: React.FC<Props> = ({
             <input
               type="text"
               defaultValue={defaultValue}
-              placeholder="Search…"
+              placeholder="Busque seu produto…"
               className="input-bordered input md:w-96"
               onChange={searchOnChange}
             />
