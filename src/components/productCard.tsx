@@ -9,31 +9,27 @@ export const ProductCard: React.FC<{
 }> = ({ data }) => {
   return (
     <a
-      className="card border bg-base-100 shadow-xl lg:card-side"
+      className="card card-bordered bg-base-100 shadow-xl card-normal"
       href={`/p/${data.name}`}
     >
-      {data.photos.length > 0 ? (
-        <figure>
-          <Image
-            width={256}
-            height={256}
-            src={data.photos[0]?.url ?? ''}
-            alt={`Imagem do ${data.name}`}
-            className="w-36 object-contain lg:w-64"
-          />
-        </figure>
-      ) : (
-        <></>
-      )}
-      <div className="card-body">
+      <figure>
+        <Image
+          width={256}
+          height={256}
+          src={data.photos.length > 0 ? data.photos[0]?.url ?? '' : ''}
+          alt={`Imagem do ${data.name}`}
+          className="w-36 lg:w-64"
+        />
+      </figure>
+      <div className="card-body items-center text-center">
         <h2 className="card-title">{data.name}</h2>
-        <p>{currencyFormatter(Number(data.price))}</p>
-        <div className="card-actions justify-end">
+        <div className="card-actions justify-between items-center">
+          <p className="text-xl font-bold">{currencyFormatter(Number(data.price))}</p>
           <a href={`/p/${data.name}`} className="btn-primary btn uppercase">
             acessar
           </a>
         </div>
-      </div>
+      </div> 
     </a>
   )
 }
