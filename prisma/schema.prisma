@@ -62,6 +62,8 @@ model Photo {
   productId   String?
   company     Company? @relation(fields: [companyName], references: [name])
   companyName String?
+
+  @@unique([url, productId])
 }
 
 model Company {
