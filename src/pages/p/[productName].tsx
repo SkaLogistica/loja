@@ -182,13 +182,13 @@ const ProductPage: NextPage = () => {
                   {productData?.name}
                 </h2>
                 <p>{productData?.description}</p>
+              </div>
+              <div className="hidden w-full flex-col items-center gap-y-4 md:flex">
                 <div className="flex w-full flex-col items-end">
-                  <p className="text-3xl font-bold md:text-xl">
+                  <p className="text-3xl font-bold">
                     {currencyFormatter(Number(productData?.price ?? 0))}
                   </p>
                 </div>
-              </div>
-              <div className="hidden w-full flex-col items-center gap-y-4 md:flex">
                 <WhatsAppBuyButton
                   href={whatsAppProductUrl}
                   onClick={buyProduct}
@@ -197,6 +197,9 @@ const ProductPage: NextPage = () => {
               </div>
             </div>
             <div className="flex w-full flex-col items-center gap-y-4 md:hidden">
+              <p className="text-4xl font-bold">
+                {currencyFormatter(Number(productData?.price ?? 0))}
+              </p>
               <WhatsAppBuyButton
                 href={whatsAppProductUrl}
                 onClick={buyProduct}
