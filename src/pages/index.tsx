@@ -69,7 +69,7 @@ const Home: NextPage = () => {
     >
       <main className="flex w-full flex-1 flex-col items-center justify-center gap-4">
         <div className="relative py-4">
-          <div className="absolute flex justify-between transform -translate-y-1/2 left-5 right-5 top-1/2">
+          <div className="absolute flex justify-between -translate-y-1/2 inset-x-5 top-1/2">
             <button onClick={() => {
                 if(carouselRef.current === null) return;
                 carouselRef.current.scrollLeft -= window.innerWidth;

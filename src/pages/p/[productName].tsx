@@ -2,6 +2,7 @@ import { useRef, useState } from 'react'
 import type { inferProcedureOutput } from '@trpc/server'
 import { type NextPage } from 'next'
 import Image from 'next/image'
+import Link from 'next/link'
 import { useRouter } from 'next/router'
 
 import { Breadcrumbs, ProductList } from '@root/components'
@@ -9,7 +10,6 @@ import { env } from '@root/env/client.mjs'
 import { StoreLayout } from '@root/layouts'
 import type { AppRouter } from '@root/server/trpc/router/_app'
 import { currencyFormatter, stringifyQueryParam, trpc } from '@root/utils'
-import Link from 'next/link'
 
 const PhotosCarousel: React.FC<{
   product?: inferProcedureOutput<AppRouter['product']['get']>
