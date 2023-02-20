@@ -6,6 +6,7 @@ import Link from 'next/link'
 import { useRouter } from 'next/router'
 import { signIn, signOut, useSession } from 'next-auth/react'
 
+import { FileInput } from '@root/components'
 import {
   currencyFormatter,
   getAvatarImg,
@@ -233,36 +234,10 @@ const EditarProduto: NextPage = () => {
             }}
           >
             {/* TODO: mask and parse currency input */}
-            <div className="flex gap-10">
-              {Array.from(files).map(({ file, url, id: photoId }) => (
-                <div key={url} className="indicator">
-                  <div className="indicator-item">
-                    <button
-                      className="btn btn-ghost btn-square bg-red-500 text-base-100"
-                      onClick={() => {
-                        deleteFile({ file, url })
-                        if (photoId === undefined) return
-                        deletePhoto({
-                          id: photoId,
-                        })
-                      }}
-                    >
-                      <svg
-                        xmlns="http://www.w3.org/2000/svg"
-                        className="h-6 w-6"
-                        fill="none"
-                        viewBox="0 0 24 24"
-                        stroke="currentColor"
-                      >
-                        <path
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                          strokeWidth="2"
-                          d="M6 18L18 6M6 6l12 12"
-                        />
-                      </svg>
-                    </button>
-                  </div>
+            <FileInput
+              data={files}
+              renderItem={({url, id: photoId, file }) => (
+                <div className="flex">
                   <button className="btn btn-ghost lowercase">
                     <a
                       href={url ?? '#'}
@@ -273,49 +248,36 @@ const EditarProduto: NextPage = () => {
                       {isLocalUrl(url) ? file?.name : url.split('/').pop()}
                     </a>
                   </button>
-                </div>
-              ))}
-            </div>
-            <label
-              className="flex h-20 w-64 cursor-pointer items-center justify-center rounded border border-solid border-black object-cover text-lg"
-              htmlFor="add-single-img"
-            >
-              <div className="flex items-center justify-center gap-2">
-                Fotos
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  width="24"
-                  height="24"
-                  fill="#000000"
-                  viewBox="0 0 256 256"
-                >
-                  <rect width="256" height="256" fill="none"></rect>
-                  <path
-                    d="M208,208H48a16,16,0,0,1-16-16V80A16,16,0,0,1,48,64H80L96,40h64l16,24h32a16,16,0,0,1,16,16V192A16,16,0,0,1,208,208Z"
-                    fill="none"
-                    stroke="#000000"
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                    stroke-width="16"
-                  ></path>
-                  <circle
-                    cx="128"
-                    cy="132"
-                    r="36"
-                    fill="none"
-                    stroke="#000000"
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                    stroke-width="16"
-                  ></circle>
-                </svg>
+                  <button
+                    className="btn btn-square border-none bg-black/50 hover:bg-red-500 text-base-100"
+                    onClick={() => {
+                      deleteFile({ file, url })
+                      if (photoId === undefined) return
+                      deletePhoto({
+                        id: photoId,
+                      })
+                    }}
+                  >
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      className="h-6 w-6"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                      stroke="currentColor"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth="2"
+                        d="M6 18L18 6M6 6l12 12"
+                      />
+                    </svg>
+                  </button>
               </div>
-            </label>
-            <input
-              type="file"
-              id="add-single-img"
+              )}
+              className="file-input file-input-bordered"
+              id="add-product-imgs"
               accept="image/png, image/jpeg"
-              className="hidden"
               alt="Selecione as fotos do produto"
               multiple
               onChange={(e) => {

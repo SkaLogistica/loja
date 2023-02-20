@@ -1,5 +1,6 @@
 export * from './breadcrumbs'
 export * from './categoryBanner'
+export * from './fileInput'
 export * from './head'
 export * from './header'
 export * from './message'
