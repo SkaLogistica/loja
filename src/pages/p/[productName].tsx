@@ -50,7 +50,7 @@ const PhotosCarousel: React.FC<{
         width={384}
         height={384}
         alt={`Imagem do produto ${product.name}`}
-        className="h-[15rem] w-[15rem] md:h-96 md:w-96 "
+        className="h-[15rem] w-[15rem] md:max-h-96 md:h-auto md:max-w-96 md:w-auto"
       />
     </div>
   )
@@ -181,7 +181,12 @@ const ProductPage: NextPage = () => {
                 <h2 className="hidden text-3xl font-bold md:block">
                   {productData?.name}
                 </h2>
-                <p className="break-words w-52 md:w-1/6">{productData?.description}</p>
+                <p>{productData?.description?.substring(0, 17)}</p>
+                {
+                  (productData?.description?.length ?? 0) > 17
+                  ? <a href="#leia-mais" className="link-info">Leia mais</a>
+                  : ''
+                }
               </div>
               <div className="hidden w-full flex-col items-center gap-y-4 md:flex">
                 <div className="flex w-full flex-col items-end">
@@ -207,6 +212,14 @@ const ProductPage: NextPage = () => {
               <Button disabled>Adicionar ao Carrinho</Button>
             </div>
           </div>
+          {
+          (productData?.description?.length ?? 0) > 17
+            ? <div id="leia-mais">
+                <h2 className="text-3xl font-bold">Descrição do Produto</h2>
+                <p className="break-words">{productData?.description}</p>
+              </div>
+            : <></>
+          }
           <div className="flex w-full flex-1 flex-col items-center justify-center gap-2 p-4 md:items-start md:p-0">
             <h2 className="text-3xl font-bold">Outros produtos</h2>
             <ProductList data={productsData} />
