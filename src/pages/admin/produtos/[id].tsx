@@ -79,7 +79,19 @@ const EditarProduto: NextPage = () => {
     id?: string
     file?: File
     url: string
-  }) => setFiles((old) => [...old, { id, file, url }])
+  }) => {
+    const searchDuplicatedPhoto = files.find(({ url: arrUrl, file: arrFile }) => {
+      if(arrFile === undefined) return arrUrl === url;
+      return arrFile.name === file?.name
+    })
+
+    if(searchDuplicatedPhoto !== undefined){
+      addFeedback('ERRO: Foto duplicada');
+      return;
+    }
+
+    setFiles((old) => [...old, { id, file, url }])
+  }
   const deleteFile = ({ url }: { file?: File; url: string }) =>
     setFiles((old) => old.filter(({ url: arrUrl }) => arrUrl !== url))
 
