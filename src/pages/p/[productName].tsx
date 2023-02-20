@@ -181,7 +181,7 @@ const ProductPage: NextPage = () => {
                 <h2 className="hidden text-3xl font-bold md:block">
                   {productData?.name}
                 </h2>
-                <p>{productData?.description}</p>
+                <p className="break-words w-52 md:w-1/6">{productData?.description}</p>
               </div>
               <div className="hidden w-full flex-col items-center gap-y-4 md:flex">
                 <div className="flex w-full flex-col items-end">
