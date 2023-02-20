@@ -9,6 +9,7 @@ import { env } from '@root/env/client.mjs'
 import { StoreLayout } from '@root/layouts'
 import type { AppRouter } from '@root/server/trpc/router/_app'
 import { currencyFormatter, stringifyQueryParam, trpc } from '@root/utils'
+import Link from 'next/link'
 
 const PhotosCarousel: React.FC<{
   product?: inferProcedureOutput<AppRouter['product']['get']>
@@ -184,7 +185,7 @@ const ProductPage: NextPage = () => {
                 <p>{productData?.description?.substring(0, 17)}</p>
                 {
                   (productData?.description?.length ?? 0) > 17
-                  ? <a href="#leia-mais" className="link-info">Leia mais</a>
+                  ? <Link href="#leia-mais" replace scroll={false} className="link-info">Leia mais</Link>
                   : ''
                 }
               </div>
