@@ -155,7 +155,7 @@ export const productRouter = router({
             (value) =>
               isDecimal(value, {
                 decimal_digits: '1,3',
-                locale: 'pt-BR',
+                locale: 'en-US',
               }),
             {
               message: 'Invalid decimal value',
