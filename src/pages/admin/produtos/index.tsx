@@ -2,6 +2,7 @@ import { useState } from 'react'
 import { type NextPage } from 'next'
 import Head from 'next/head'
 import Link from 'next/link'
+import { useRouter } from 'next/router'
 import { signIn, signOut, useSession } from 'next-auth/react'
 
 import {
@@ -20,8 +21,7 @@ const Produtos: NextPage = () => {
   const [productsPerPage, setProductsPerPage] = useState(5)
   const [page, setPage] = useState(0)
   const { addFeedback, Messages } = useFeedback()
-
-  const enableCreateProduct = name !== ''
+  const router = useRouter()
 
   const clearFilters = () => {
     setName('')
@@ -51,6 +51,7 @@ const Produtos: NextPage = () => {
       addFeedback(`Produto ${product.name} criado`)
       clearFilters()
       reloadProducts()
+      router.replace(`/admin/produtos/${product.id}`)
     },
     onError: (error) => addFeedback(`ERRO: ${error.message}`),
   })
@@ -226,7 +227,6 @@ const Produtos: NextPage = () => {
             </select>
             <input
               type="submit"
-              disabled={!enableCreateProduct}
               className="btn"
               value="Novo Produto"
             />
