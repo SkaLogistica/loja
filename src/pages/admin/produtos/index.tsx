@@ -276,9 +276,36 @@ const Produtos: NextPage = () => {
                   <th>Preço</th>
                   <th>Categoria</th>
                   <th>SubCategoria</th>
-                  <th>Em Estoque</th>
-                  <th>Mostrar Preço</th>
-                  <th>Exibir Produto</th>
+                  <th>
+                    <div className="flex flex-col items-center gap-2">
+                      <p>Em Estoque</p>
+                      <input
+                        type="checkbox"
+                        className="toggle"
+                        onChange={(e) => Promise.all(productsData?.map(({id}) => updateProduct({id, available: e.target.checked})) ?? []).then(() => reloadProducts())}
+                      />
+                    </div>
+                  </th>
+                  <th>
+                    <div className="flex flex-col items-center gap-2">
+                      <p>Mostrar Preço</p>
+                      <input
+                        type="checkbox"
+                        className="toggle"
+                        onChange={(e) => Promise.all(productsData?.map(({id}) => updateProduct({id, hiddenPrice: !e.target.checked})) ?? []).then(() => reloadProducts())}
+                      />
+                    </div>
+                  </th>
+                  <th>
+                    <div className="flex flex-col items-center gap-2">
+                      <p>Exibir Produto</p>
+                      <input
+                        type="checkbox"
+                        className="toggle"
+                        onChange={(e) => Promise.all(productsData?.map(({id}) => updateProduct({id, visibility: e.target.checked})) ?? []).then(() => reloadProducts())}
+                      />
+                    </div>
+                  </th>
                 </tr>
               </thead>
               <tbody>
@@ -318,24 +345,24 @@ const Produtos: NextPage = () => {
                       <input
                         type="checkbox"
                         className="toggle"
-                        defaultChecked={product.available}
-                        onChange={() => toggleAvailability(product)}
+                        checked={product.available}
+                        onClick={() => toggleAvailability(product)}
                       />
                     </td>
                     <td>
                       <input
                         type="checkbox"
                         className="toggle"
-                        defaultChecked={!product.hiddenPrice}
-                        onChange={() => togglePrice(product)}
+                        checked={!product.hiddenPrice}
+                        onClick={() => togglePrice(product)}
                       />
                     </td>
                     <td>
                       <input
                         type="checkbox"
                         className="toggle"
-                        defaultChecked={product.visibility}
-                        onChange={() => toggleVisibility(product)}
+                        checked={product.visibility}
+                        onClick={() => toggleVisibility(product)}
                       />
                     </td>
                   </tr>
